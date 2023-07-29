@@ -1,5 +1,6 @@
 <template>
 	<div class="bread-crumb">
+		<SvgIcon icon-name="location" class="bread-crumb-icon"></SvgIcon>
 		<el-breadcrumb separator="/">
 			<el-breadcrumb-item>{{props.item.first}}</el-breadcrumb-item>
 			<el-breadcrumb-item v-if="props.item.second">{{props.item.second}}</el-breadcrumb-item>
@@ -8,6 +9,7 @@
 </template>
 
 <script setup>
+	import SvgIcon from '@/components/SvgIcon.vue'
 	const props = defineProps(['item'])
 </script>
 
@@ -18,7 +20,11 @@
 		display: flex;
 		align-items: center;
 	}
-
+	
+	.bread-crumb-icon{
+		margin-right: 4px;
+	}
+	
 	:deep(.el-breadcrumb__item) {
 		height: 30px;
 		font-size: 16px;

@@ -186,10 +186,11 @@
 		}
 	}
 
-	.el-main{
+	.el-main {
 		--el-main-padding: 0;
+		background-color: #f3f4fa;
 	}
-	
+
 	// 无子菜单的
 	.el-menu-item:hover {
 		background: #006eff;
