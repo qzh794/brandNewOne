@@ -72,7 +72,7 @@
 						<el-icon><icon-menu /></el-icon>
 						<span>登录日志</span>
 					</el-menu-item>
-					<el-menu-item index="9">
+					<el-menu-item index="set">
 						<el-icon>
 							<Tools />
 						</el-icon>
@@ -186,6 +186,10 @@
 		}
 	}
 
+	.el-main{
+		--el-main-padding: 0;
+	}
+	
 	// 无子菜单的
 	.el-menu-item:hover {
 		background: #006eff;

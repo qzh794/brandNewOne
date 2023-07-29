@@ -13,7 +13,7 @@
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button @click="state.forgetPasswordDialog = false">取消</el-button>
-				<el-button type="primary" @click="openChanagePassword">
+				<el-button type="primary" @click="verifyAccount">
 					下一步
 				</el-button>
 			</span>
@@ -23,17 +23,17 @@
 	<el-dialog v-model="state.changePasswordDialog" title="修改密码" width="400px">
 		<el-form class="login-form" :label-position="labelPosition" :rules="rules">
 			<el-form-item label="输入您的新密码" prop="password">
-				<el-input v-model="forgetData.password" placeholder="输入您的新密码" />
+				<el-input v-model="forgetData.password" placeholder="输入您的新密码" show-password/>
 			</el-form-item>
 			<el-form-item label="再次确认您的新密码" prop="repassword">
-				<el-input v-model="forgetData.repassword" placeholder="再次确认您的新密码" />
+				<el-input v-model="forgetData.repassword" placeholder="再次确认您的新密码" show-password/>
 			</el-form-item>
 		</el-form>
 		<!-- 底部内容 -->
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button @click="state.changePasswordDialog = false">取消</el-button>
-				<el-button type="primary" @click="state.changePasswordDialog = false">
+				<el-button type="primary" @click="resetPassword">
 					确定
 				</el-button>
 			</span>
@@ -43,7 +43,8 @@
 
 <script lang="ts" setup>
 	import { reactive, ref } from 'vue'
-
+	import { verify, reset } from '@/api/login.js'
+	import { ElMessage } from 'element-plus'
 	// 表单对齐方式
 	const labelPosition = ref('top')
 	// 表单对象接口
@@ -81,11 +82,38 @@
 		changePasswordDialog: false,
 	})
 
-
-	// 打开修改密码的弹窗
-	const openChanagePassword = () => {
-		state.forgetPasswordDialog = false
-		state.changePasswordDialog = true
+	
+	// 打开验证邮箱和账号的弹窗
+	const verifyAccount = async () => {
+		const res = await verify(forgetData)
+		if(res.data.status == 0){
+			ElMessage({
+				message: '验证成功',
+				type: 'success',
+			})
+			// localStorage.setItem 存放到浏览器的本地存储空间
+			// sessionStorage.setItem 存放到浏览器的会话存储空间
+			localStorage.setItem('id',res.data.id)
+			state.forgetPasswordDialog = false
+			state.changePasswordDialog = true
+		}else{
+			ElMessage.error('验证失败')
+		}
+	}
+	// 重置密码
+	const resetPassword = async() =>{
+		if(forgetData.password==forgetData.repassword){
+			const newPassword = forgetData.repassword
+			// localStorage/sessionStorage.getItem获取我们存储在浏览器的数据
+			// 调用接口
+			await reset(localStorage.getItem('id'),newPassword)
+			ElMessage({
+				message: '修改成功',
+				type: 'success',
+			})
+		}else{
+			ElMessage.error('修改失败,请检查密码是否一致')
+		}
 	}
 	// 打开弹窗
 	const open = () => {
