@@ -82,12 +82,12 @@
 			</el-aside>
 			<el-container>
 				<el-header>
-					<span class="header-left-content">尊敬的 李清 欢迎您登录本系统</span>
+					<span class="header-left-content">尊敬的 {{userStore.name}} 欢迎您登录本系统</span>
 					<div class="header-right-content">
 						<el-icon :size="20">
 							<Message />
 						</el-icon>
-						<el-avatar :size="24" :src="circleUrl" />
+						<el-avatar :size="24" :src="userStore.imageUrl" />
 						<el-dropdown>
 							<span class="el-dropdown-link">
 								设置
@@ -112,18 +112,16 @@
 </template>
 
 <script lang="ts" setup>
+	import { reactive, toRefs, ref } from 'vue'
 	import {
 		Menu as IconMenu,
 	} from '@element-plus/icons-vue'
 	import { useRouter } from 'vue-router'
-	import { reactive, toRefs, ref } from 'vue'
+	import {
+		useUserInfor
+	} from '@/store/userinfor.js'
+	const userStore = useUserInfor()
 	const router = useRouter()
-	const state = reactive({
-		circleUrl:
-			'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
-	})
-
-	const { circleUrl } = toRefs(state)
 
 	const goLogin = () => {
 		router.push('/login')

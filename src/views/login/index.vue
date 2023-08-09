@@ -17,7 +17,7 @@
 										<el-input v-model="loginData.account" placeholder="请输入账号" />
 									</el-form-item>
 									<el-form-item label="密码">
-										<el-input v-model="loginData.password" placeholder="请输入密码" show-password/>
+										<el-input v-model="loginData.password" placeholder="请输入密码" show-password />
 									</el-form-item>
 									<!-- 底部外壳 -->
 									<div class="footer-wrapped">
@@ -76,8 +76,10 @@
 	import {
 		login, register
 	} from '@/api/login'
+	import { useUserInfor } from '@/store/userinfor'
 	const activeName = ref('first')
 	const router = useRouter()
+	const store = useUserInfor()
 	// 表单接口
 	interface formData {
 		account : number;
@@ -98,13 +100,16 @@
 	// 登录
 	const Login = async () => {
 		const res = await login(loginData)
+		const { id } = res.data.results
 		const { token } = res.data
 		if (res.data.message == "登录成功") {
 			ElMessage({
 				message: '登录成功',
 				type: 'success',
 			})
-			localStorage.setItem('token',token)
+			sessionStorage.setItem('id', id)
+			localStorage.setItem('token', token)
+			store.userInfor(id)
 			// 跳转
 			router.push('/home')
 		} else {

@@ -4,6 +4,8 @@ import {
 import App from './App.vue'
 // 导入路由
 import router from './router'
+// 导入pinia
+import pinia from './store'
 // 导入element plus icon
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // 导入element plus
@@ -23,4 +25,4 @@ app.use(ElementPlus, {
 	locale: zhCn,
 })
 
-app.use(router).use(ElementPlus).mount('#app')
+app.use(router).use(ElementPlus).use(pinia).mount('#app')
