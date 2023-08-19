@@ -25,4 +25,4 @@ app.use(ElementPlus, {
 	locale: zhCn,
 })
 
-app.use(router).use(ElementPlus).use(pinia).mount('#app')
+app.use(router).use(pinia).mount('#app')

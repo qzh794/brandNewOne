@@ -100,9 +100,9 @@
 	// 登录
 	const Login = async () => {
 		const res = await login(loginData)
-		const { id } = res.data.results
-		const { token } = res.data
-		if (res.data.message == "登录成功") {
+		const { id } = res.results
+		const { token } = res
+		if (res.message == "登录成功") {
 			ElMessage({
 				message: '登录成功',
 				type: 'success',
@@ -122,7 +122,7 @@
 	const Register = async () => {
 		if (registerData.password == registerData.repassword) {
 			const res = await register(registerData)
-			if (res.data.message == "注册账号成功") {
+			if (res.message == "注册账号成功") {
 				ElMessage({
 					message: '注册成功',
 					type: 'success',
