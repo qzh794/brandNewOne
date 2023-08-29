@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { reactive, ref } from 'vue'
+	import { reactive, ref,onBeforeUnmount } from 'vue'
 	import { changePassword } from '@/api/userinfor.js'
 	import { ElMessage } from 'element-plus'
 	import { useRouter } from 'vue-router'
@@ -82,6 +82,10 @@
 
 	defineExpose({
 		open
+	})
+	
+	onBeforeUnmount(()=>{
+		bus.all.clear()
 	})
 </script>
 

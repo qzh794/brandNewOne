@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { reactive, ref } from 'vue'
+	import { reactive, ref,onBeforeUnmount } from 'vue'
 	import { verify, reset } from '@/api/login.js'
 	import { ElMessage } from 'element-plus'
 	// 表单对齐方式
