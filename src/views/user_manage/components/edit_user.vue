@@ -1,5 +1,5 @@
 <template>
-	<el-dialog v-model="dialogFormVisible" title='编辑管理员信息' width="600px" align-center draggable>
+	<el-dialog v-model="dialogFormVisible" title='编辑用户信息' width="600px" align-center draggable>
 		<div class="dialog-content">
 			<el-form ref="ruleFormRef" :model="formData" :rules="rules" label-width="100px">
 				<el-form-item label="账号" prop="account">
@@ -19,15 +19,14 @@
 				</el-form-item>
 				<el-form-item label="部门" prop="department">
 					<el-select v-model="formData.department" placeholder="请选择部门">
-						<el-option label="总裁办" value="总裁办" />
-						<el-option label="项目部" value="项目部" />
+						<el-option v-for="item in departmentData" :key="item" :label="item" :value="item" />
 					</el-select>
 				</el-form-item>
 			</el-form>
 		</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="editadmin">
+				<el-button type="primary" @click="edituser">
 					确定
 				</el-button>
 			</span>
@@ -36,26 +35,30 @@
 </template>
 
 <script lang="ts" setup>
-	import { reactive, ref,onBeforeUnmount } from 'vue'
+	import { reactive, ref, onBeforeUnmount } from 'vue'
 	import {
 		bus
 	} from "@/utils/mitt.js"
-	import {
-		getUserInfor, editAdmin
-	} from '@/api/userinfor.js'
+	import { editAdmin,getUserInfor } from '@/api/userinfor.js'
+	import { getDepartment } from '@/api/setting'
 	import { ElMessage } from 'element-plus'
 	bus.on('editId', async (id : number) => {
 		const res = await getUserInfor(id)
-		formData.id = res.id
+		formData.id = id
 		formData.account = res.account
 		formData.name = res.name
 		formData.sex = res.sex
 		formData.email = res.email
 		formData.department = res.department
 	})
-
+	// 部门数据
+	const departmentData = ref([])
+	const getdepartment = async () => {
+		departmentData.value = await getDepartment()
+	}
+	getdepartment()
 	interface formData {
-		id ?: number,
+		id:number,
 		account : number,
 		name : string,
 		sex : string,
@@ -64,52 +67,51 @@
 	}
 
 	const formData : formData = reactive({
-		id: null,
+		id: 0,
 		account: null,
 		name: '',
 		sex: '',
 		email: '',
-		department: ''
+		department: '',
+		identity: '用户'
 	})
 
 	const rules = reactive({
-		account: [
-			{ required: true, message: '请输入管理员的注册账号', trigger: 'blur' },
-		],
 		name: [
-			{ required: true, message: '请输入管理员的名字', trigger: 'blur' },
+			{ required: true, message: '请输入要修改的名字', trigger: 'blur' },
 		],
 		sex: [
-			{ required: true, message: '请输入管理员的性别', trigger: 'blur' },
+			{ required: true, message: '请输入要修改的性别', trigger: 'blur' },
 		],
 		email: [
-			{ required: true, message: '请输入管理员的邮箱', trigger: 'blur' },
+			{ required: true, message: '请输入要修改的邮箱', trigger: 'blur' },
 		],
 		department: [
-			{ required: true, message: '请输入管理员的部门', trigger: 'blur' },
+			{ required: true, message: '请输入要修改的部门', trigger: 'blur' },
 		],
 	})
-	// const emit = defineEmits(['success'])
-	const editadmin = async () => {
+	const emit = defineEmits(['success'])
+	// 编辑用户
+	const edituser = async () => {
 		const res = await editAdmin(formData)
+		console.log(res)
 		if (res.status == 0) {
 			ElMessage({
-				message: '编辑管理员信息成功',
+				message: '创建管理员成功',
 				type: 'success',
 			})
-			// emit('success')
-			bus.emit('adminDialogOff',2)
+			bus.emit('offDialog',1)
+			emit('success')
 			dialogFormVisible.value = false
 		} else {
-			ElMessage.error('编辑管理员信息失败')
+			ElMessage.error('创建管理员失败')
 			dialogFormVisible.value = false
 		}
 	}
-
 	// 弹窗开关
 	const dialogFormVisible = ref(false)
 
-	// 打开编辑管理员的弹窗
+	// 打开创建管理员的弹窗
 	const open = () => {
 		dialogFormVisible.value = true
 	}
@@ -117,8 +119,8 @@
 	defineExpose({
 		open
 	})
-	
-	onBeforeUnmount(()=>{
+
+	onBeforeUnmount(() => {
 		bus.all.clear()
 	})
 </script>

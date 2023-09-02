@@ -9,23 +9,23 @@
 				<div class="left-wrapped">
 					<div class="search-wrapped">
 						<el-input v-model="adminAccount" class="w-50 m-2" size="large" placeholder="输入账号进行搜索"
-							:prefix-icon="Search" @change='searchAdmin()' />
+							:prefix-icon="Search" @change='searchuser()' />
 					</div>
 					<div class="select-wrapped">
-						<el-select v-model="formData.department" placeholder="请选择部门">
-							<el-option label="总裁办" value="总裁办" />
-							<el-option label="项目部" value="项目部" />
+						<el-select v-model="department" placeholder="请选择部门" clearable @change="searchForDepartment"
+							@clear="claerOperation">
+							<el-option v-for="item in departmentData" :key="item" :label="item" :value="item" />
 						</el-select>
 					</div>
 				</div>
 				<div class="button-wrapped">
-					<el-button plain type="primary">筛选冻结用户</el-button>
-						<el-button plain type="primary">显示全部用户</el-button>
+					<el-button plain type="primary" @click="banUserList">筛选冻结用户</el-button>
+					<el-button plain type="primary" @click="getFirstPageList">显示全部用户</el-button>
 				</div>
 			</div>
 			<!-- 表格内容 -->
 			<div class="table-content">
-				<el-table :data="tableData" style="width: 100%" border>
+				<el-table :data="tableData" style="width: 100%" border @row-dblclick='openUser'>
 					<el-table-column type="index" width="50" />
 					<el-table-column prop="account" label="账号" />
 					<el-table-column prop="name" label="姓名" />
@@ -40,13 +40,23 @@
 							</div>
 						</template>
 					</el-table-column>
-					<el-table-column prop="create_time" label="创建时间" />
-					<el-table-column prop="update_time" label="更新时间" />
+					<el-table-column prop="create_time" label="创建时间">
+						<template #default="{row}">
+							<div>{{row.create_time?.slice(0,10)}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column prop="update_time" label="更新时间">
+						<template #default="{row}">
+							<div>{{row.update_time?.slice(0,10)}}</div>
+						</template>
+					</el-table-column>
 					<el-table-column label="操作" width="200">
 						<template #default="{row}">
 							<div>
-								<el-button type="primary">冻结</el-button>
-								<el-button type="success">解冻</el-button>
+								<el-button type="primary" @click="banuser(row.id)"
+									:disabled='row.status==1'>冻结</el-button>
+								<el-button type="success" @click="hotuser(row.id)"
+									:disabled='row.status==0'>解冻</el-button>
 							</div>
 						</template>
 					</el-table-column>
@@ -55,27 +65,30 @@
 		</div>
 		<!-- 底部 -->
 		<div class="table-footer">
-			<el-pagination :page-size="20" :pager-count="11" layout="prev, pager, next" :total="1000" />
+			<el-pagination :page-size="1" :ccurrent-page="paginationData.currentPage" :pager-count="7"
+				:total="adminTotal" :page-count="paginationData.pageCount" @current-change="currentChange"
+				layout="prev, pager, next" />
 		</div>
 	</div>
-	<!-- 	<create ref="Create" @success='getAdminlist'></create>
-	<edit ref='Edit' @success='getAdminlist'></edit>
-	<deleteA ref="Delete" @success='getAdminlist'></deleteA> -->
+	<userinfor ref="useri"></userinfor>
 </template>
 
 <script lang="ts" setup>
 	import {
-		ref
+		ref, reactive
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
-	// import create from '../components/create_admin.vue'
-	// import edit from '../components/edit_admin.vue'
-	// import deleteA from '../components/delete_admin.vue'
+	import userinfor from '../components/user_infor.vue'
 	import {
 		bus
 	} from "@/utils/mitt.js"
-	import { getAdminList, searchUser } from '@/api/userinfor.js'
+	import {
+		searchUser, searchDepartment,
+		getAdminListLength, returnListData, getBanList, banUser, hotUser
+	} from '@/api/userinfor.js'
+	import { getDepartment } from '@/api/setting'
+	import { ElMessage } from 'element-plus'
 
 	// 面包屑
 	const breadcrumb = ref()
@@ -86,44 +99,107 @@
 	// 搜索框的modelValue
 	const adminAccount = ref<number>()
 	// 表格内容
-	const tableData = ref([
-		{
-			id: 1,
-			status: 0
-		}
-	])
-	// 获取管理员列表
-	// const getAdminlist = async () => {
-	// 	tableData.value = await getAdminList(item.value.first)
-	// }
-	// getAdminlist()
+	const tableData = ref()
 
-	const searchAdmin = async () => {
+	// 通过账号进行搜索
+	const searchuser = async () => {
 		tableData.value = await searchUser(adminAccount.value)
 	}
+	// 部门数据
+	const departmentData = ref([])
+	const getdepartment = async () => {
+		departmentData.value = await getDepartment()
+	}
+	getdepartment()
+	// 部门
+	const department = ref()
+	const searchForDepartment = async () => {
+		tableData.value = await searchDepartment(department.value)
+	}
+	// 清空选择框
+	const claerOperation = () => {
+		getFirstPageList()
+	}
 
-	const formData = ref({
-		department: ''
+	// 分页数据
+	const paginationData = reactive({
+		// 总页数
+		pageCount: 1,
+		// 当前所处页数
+		currentPage: 1,
 	})
+	const adminTotal = ref<number>(0)
+	// 获取管理员的数量
+	const getAdminListlength = async () => {
+		const res = await getAdminListLength('用户')
+		adminTotal.value = res.length
+		paginationData.pageCount = Math.ceil(res.length / 10)
+	}
+	getAdminListlength()
+	// 默认获取第一页的数据
+	const getFirstPageList = async () => {
+		tableData.value = await returnListData(1, '用户')
+	}
+	getFirstPageList()
+	// 监听换页
+	const currentChange = async (value : number) => {
+		paginationData.currentPage = value
+		tableData.value = await returnListData(value, '用户')
+	}
 
-	// // 创建管理员
-	// const Create = ref()
-	// const openCreate = (id : number) => {
-	// 	bus.emit('createId', id)
-	// 	Create.value.open()
-	// }
-	// // 编辑管理员
-	// const Edit = ref()
-	// const openEdit = (id : number) => {
-	// 	bus.emit('editId', id)
-	// 	Edit.value.open()
-	// }
-	// // 降级管理员
-	// const Delete = ref()
-	// const openDelete = (id : number) => {
-	// 	bus.emit('deleteId', id)
-	// 	Delete.value.open()
-	// }
+
+	// 筛选冻结用户
+	const banUserList = async () => {
+		tableData.value = await getBanList()
+	}
+
+
+	// 冻结用户
+	const banuser = async (id : number) => {
+		const res = await banUser(id)
+		if (res.status == 0) {
+			ElMessage({
+				message: '冻结用户成功',
+				type: 'success',
+			})
+			tableData.value = await returnListData(paginationData.currentPage, '用户')
+		} else {
+			ElMessage.error('冻结用户失败')
+		}
+	}
+
+	// 解冻用户
+	const hotuser = async (id : number) => {
+		const res = await hotUser(id)
+		if (res.status == 0) {
+			ElMessage({
+				message: '解冻用户成功',
+				type: 'success',
+			})
+			tableData.value = await returnListData(paginationData.currentPage, '用户')
+		} else {
+			ElMessage.error('解冻用户失败')
+		}
+	}
+
+
+	const useri = ref()
+	const openUser = (row : any) => {
+		bus.emit('userId', row)
+		useri.value.open()
+	}
+
+	bus.on('offDialog', async (id : number) => {
+		// 当前页数
+		const current = paginationData.currentPage
+		if (id) {
+			tableData.value = await returnListData(paginationData.currentPage, '用户')
+			if (tableData.value.length == 0) {
+				paginationData.currentPage = current - 1
+				getAdminListlength()
+			}
+		}
+	})
 </script>
 
 <style lang='scss' scoped>

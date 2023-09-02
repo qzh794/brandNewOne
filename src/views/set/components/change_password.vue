@@ -84,9 +84,9 @@
 		open
 	})
 	
-	onBeforeUnmount(()=>{
-		bus.all.clear()
-	})
+	// onBeforeUnmount(()=>{
+	// 	bus.all.clear()
+	// })
 </script>
 
 <style lang="scss" scoped>

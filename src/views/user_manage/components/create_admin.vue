@@ -22,8 +22,7 @@
 				</el-form-item>
 				<el-form-item label="部门" prop="department">
 					<el-select v-model="formData.department" placeholder="请选择部门">
-						<el-option label="总裁办" value="总裁办" />
-						<el-option label="项目部" value="项目部" />
+						<el-option v-for="item in departmentData" :key="item" :label="item" :value="item" />
 					</el-select>
 				</el-form-item>
 			</el-form>
@@ -44,6 +43,7 @@
 		bus
 	} from "@/utils/mitt.js"
 	import { createAdmin } from '@/api/userinfor.js'
+	import {getDepartment } from '@/api/setting'
 	import { ElMessage } from 'element-plus'
 	const title = ref()
 	bus.on('createId', (id : number) => {
@@ -57,7 +57,12 @@
 			title.value = '新建消息管理员'
 		}
 	})
-
+	// 部门数据
+	const departmentData = ref([])
+	const getdepartment = async() => {
+		departmentData.value = await getDepartment()
+	}
+	getdepartment()
 	interface formData {
 		account : number,
 		password : string,
@@ -97,17 +102,17 @@
 			{ required: true, message: '请输入管理员的部门', trigger: 'blur' },
 		],
 	})
-	const emit = defineEmits(['success'])
+	// const emit = defineEmits(['success'])
 	// 创建管理员
 	const addAdmin = async () => {
 		const res = await createAdmin(formData)
-		console.log(res)
 		if (res.status == 0) {
 			ElMessage({
 				message: '创建管理员成功',
 				type: 'success',
 			})
-			emit('success')
+			// emit('success')
+			bus.emit('adminDialogOff',1)
 			dialogFormVisible.value = false
 		} else {
 			ElMessage.error('创建管理员失败')

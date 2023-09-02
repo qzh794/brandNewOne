@@ -203,3 +203,26 @@ export const deleteUser = (id, account) => {
 		}
 	})
 }
+
+// 获取对应身份的一个总人数
+export const getAdminListLength = identity => {
+	return instance({
+		url: '/user/getAdminListLength',
+		method: 'POST',
+		data: {
+			identity
+		}
+	})
+}
+
+// 监听换页返回数据
+export const returnListData = (pager,identity) => {
+	return instance({
+		url: '/user/returnListData',
+		method: 'POST',
+		data: {
+			pager,
+			identity
+		}
+	})
+}

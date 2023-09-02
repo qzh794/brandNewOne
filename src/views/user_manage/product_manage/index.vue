@@ -37,16 +37,19 @@
 		</div>
 		<!-- 底部 -->
 		<div class="table-footer">
-			<el-pagination :page-size="20" :pager-count="11" :total="1000" layout="prev, pager, next" />
+			<el-pagination :page-size="1" :ccurrent-page="paginationData.currentPage" :pager-count="7"
+				:total="adminTotal" :page-count="paginationData.pageCount" @current-change="currentChange"
+				layout="prev, pager, next" />
 		</div>
 	</div>
-	<create ref="Create" @success='getAdminlist'></create>
-	<edit ref='Edit' @success='getAdminlist'></edit>
-	<deleteA ref="Delete" @success='getAdminlist'></deleteA>
+	<create ref="Create"></create>
+	<edit ref='Edit'></edit>
+	<deleteA ref="Delete"></deleteA>
 </template>
 
 <script lang="ts" setup>
 	import {
+		reactive,
 		ref
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
@@ -57,7 +60,7 @@
 	import {
 		bus
 	} from "@/utils/mitt.js"
-	import { getAdminList, searchUser } from '@/api/userinfor.js'
+	import { searchUser, getAdminListLength, returnListData } from '@/api/userinfor.js'
 
 	// 面包屑
 	const breadcrumb = ref()
@@ -69,15 +72,61 @@
 	const adminAccount = ref<number>()
 	// 表格内容
 	const tableData = ref()
-	// 获取管理员列表
-	const getAdminlist = async () => {
-		tableData.value = await getAdminList(item.value.first)
-	}
-	getAdminlist()
 
 	const searchAdmin = async () => {
 		tableData.value = await searchUser(adminAccount.value)
 	}
+	// 分页数据
+	const paginationData = reactive({
+		// 总页数
+		pageCount: 1,
+		// 当前所处页数
+		currentPage: 1,
+	})
+	const adminTotal = ref<number>(0)
+	// 获取管理员的数量
+	const getAdminListlength = async () => {
+		const res = await getAdminListLength('产品管理员')
+		adminTotal.value = res.length
+		paginationData.pageCount = Math.ceil(res.length / 10)
+	}
+	getAdminListlength()
+	// 默认获取第一页的数据
+	const getFirstPageList = async () => {
+		tableData.value = await returnListData(1, '产品管理员')
+	}
+	getFirstPageList()
+	// 监听换页
+	const currentChange = async (value : number) => {
+		paginationData.currentPage = value
+		tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
+	}
+
+	bus.on('adminDialogOff', async (id : number) => {
+		// 当前页数
+		const current = paginationData.currentPage
+		// 1为创建管理员
+		if (id == 1) {
+			getAdminListlength()
+		}
+		// 2为编辑管理员
+		if (id == 2) {
+			tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
+		}
+		// 3为对管理员进行降职
+		if (id == 3) {
+			tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
+			if (tableData.value.length == 0) {
+				paginationData.currentPage = current - 1
+				getAdminListlength()
+			}
+		}
+	})
+
+	// const getAdminlist = () => {
+	// 	getAdminListlength()
+	// }
+	// getAdminlist()
 
 	// 创建管理员
 	const Create = ref()
