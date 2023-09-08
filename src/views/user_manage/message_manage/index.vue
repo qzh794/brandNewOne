@@ -47,7 +47,7 @@
 
 <script lang="ts" setup>
 	import {
-		ref, reactive
+		ref, reactive,onBeforeUnmount
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
@@ -62,7 +62,8 @@
 	const breadcrumb = ref()
 	// 面包屑参数
 	const item = ref({
-		first: '消息管理员',
+		first: '用户管理',
+		second:'消息管理员'
 	})
 	const adminAccount = ref('')
 
@@ -138,6 +139,10 @@
 		bus.emit('deleteId', id)
 		Delete.value.open()
 	}
+	
+	onBeforeUnmount(() => {
+		bus.all.clear()
+	})
 </script>
 
 <style lang='scss' scoped>

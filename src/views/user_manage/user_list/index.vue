@@ -75,7 +75,7 @@
 
 <script lang="ts" setup>
 	import {
-		ref, reactive
+		ref, reactive,onBeforeUnmount
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
@@ -94,7 +94,8 @@
 	const breadcrumb = ref()
 	// 面包屑参数
 	const item = ref({
-		first: '用户列表',
+		first: '用户管理',
+		second:'用户列表'
 	})
 	// 搜索框的modelValue
 	const adminAccount = ref<number>()
@@ -199,6 +200,10 @@
 				getAdminListlength()
 			}
 		}
+	})
+	
+	onBeforeUnmount(() => {
+		bus.all.clear()
 	})
 </script>
 

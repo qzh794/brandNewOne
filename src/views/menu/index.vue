@@ -40,10 +40,10 @@
 							<span>产品管理</span>
 						</template>
 						<el-menu-item-group title="入库管理">
-							<el-menu-item index="4-1">产品列表</el-menu-item>
+							<el-menu-item index="product_manage_list">产品列表</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group title="出库管理">
-							<el-menu-item index="4-2">出库列表</el-menu-item>
+							<el-menu-item index="out_prodcut_manage_list">出库列表</el-menu-item>
 						</el-menu-item-group>
 					</el-sub-menu>
 					<el-sub-menu index="5">

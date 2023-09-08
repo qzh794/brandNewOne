@@ -54,6 +54,16 @@ const routes = [{
 				path: '/users_manage',
 				component: () => import('@/views/user_manage/users_manage/index.vue')
 			},
+			{
+				name: 'product_manage_list',
+				path: '/product_manage_list',
+				component: () => import('@/views/product/product_manage_list/index.vue')
+			},
+			{
+				name: 'out_prodcut_manage_list',
+				path: '/out_prodcut_manage_list',
+				component: () => import('@/views/product/out_prodcut_manage_list/index.vue')
+			},
 		]
 	},
 ]

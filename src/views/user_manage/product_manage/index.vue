@@ -23,7 +23,11 @@
 					<el-table-column prop="sex" label="性别" />
 					<el-table-column prop="department" label="部门" />
 					<el-table-column prop="email" label="邮箱" />
-					<el-table-column prop="update_time" label="更新时间" />
+					<el-table-column prop="update_time" label="更新时间" >
+						<template #default="{row}">
+							<div>{{row.update_time?.slice(0,10)}}</div>
+						</template>
+					</el-table-column>
 					<el-table-column label="操作" width="200">
 						<template #default="{row}">
 							<div>
@@ -50,7 +54,8 @@
 <script lang="ts" setup>
 	import {
 		reactive,
-		ref
+		ref,
+		onBeforeUnmount
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
@@ -66,7 +71,8 @@
 	const breadcrumb = ref()
 	// 面包屑参数
 	const item = ref({
-		first: '产品管理员',
+		first: '用户管理',
+		second:'产品管理员'
 	})
 	// 搜索框的modelValue
 	const adminAccount = ref<number>()
@@ -146,6 +152,10 @@
 		bus.emit('deleteId', id)
 		Delete.value.open()
 	}
+	
+	onBeforeUnmount(() => {
+		bus.all.clear()
+	})
 </script>
 
 <style lang='scss' scoped>
