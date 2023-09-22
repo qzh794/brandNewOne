@@ -11,8 +11,7 @@
 				</el-form-item>
 				<el-form-item label="产品类别" prop="product_category">
 					<el-select v-model="formData.product_category" placeholder="请选择产品类别">
-						<el-option label="食品类" value="食品类" />
-						<el-option label="服装类" value="服装类" />
+						<el-option v-for="item in categoryData" :key="item" :label="item" :value="item" />
 					</el-select>
 				</el-form-item>
 				<el-form-item label="产品单位" prop="product_unit">
@@ -52,6 +51,9 @@
 	import {
 		bus
 	} from "@/utils/mitt.js"
+	import {
+		getProduct
+	} from '@/api/setting'
 	
 	bus.on('editProdcutId', (row : any) => {
 		formData.id = row.id
@@ -67,12 +69,12 @@
 	const labelPosition = ref('left')
 	// const title = ref()
 
-	// 部门数据
-	// const departmentData = ref([])
-	// const getdepartment = async() => {
-	// 	departmentData.value = await getDepartment()
-	// }
-	// getdepartment()
+	// 产品类别数据
+	const categoryData = ref([])
+	const getproduct = async() => {
+		categoryData.value = await getProduct()
+	}
+	getproduct()
 	interface formData {
 		id:number,
 		product_id : number,

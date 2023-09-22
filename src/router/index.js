@@ -18,8 +18,7 @@ const routes = [{
 		name: 'menu',
 		path: '/menu',
 		component: () => import('@/views/menu/index.vue'),
-		children: [
-			{
+		children: [{
 				name: 'home',
 				path: '/home',
 				component: () => import('@/views/home/index.vue')
@@ -63,6 +62,31 @@ const routes = [{
 				name: 'out_prodcut_manage_list',
 				path: '/out_prodcut_manage_list',
 				component: () => import('@/views/product/out_prodcut_manage_list/index.vue')
+			},
+			{
+				name: 'message_list',
+				path: '/message_list',
+				component: () => import('@/views/message/message_list/index.vue')
+			},
+			{
+				name: 'recycle',
+				path: '/recycle',
+				component: () => import('@/views/message/recycle/index.vue')
+			},
+			{
+				name: 'file',
+				path: '/file',
+				component: () => import('@/views/file/index.vue')
+			},
+			{
+				name: 'operation_log',
+				path: '/operation_log',
+				component: () => import('@/views/operation_log/index.vue')
+			},
+			{
+				name: 'login_log',
+				path: '/login_log',
+				component: () => import('@/views/login_log/index.vue')
 			},
 		]
 	},

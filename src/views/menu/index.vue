@@ -54,21 +54,21 @@
 							<span>消息管理</span>
 						</template>
 						<el-menu-item-group title="消息管理">
-							<el-menu-item index="5-1">消息列表</el-menu-item>
+							<el-menu-item index="message_list">消息列表</el-menu-item>
 						</el-menu-item-group>
 						<el-menu-item-group title="回收站">
-							<el-menu-item index="5-2">回收站</el-menu-item>
+							<el-menu-item index="recycle">回收站</el-menu-item>
 						</el-menu-item-group>
 					</el-sub-menu>
-					<el-menu-item index="6">
+					<el-menu-item index="file">
 						<el-icon><icon-menu /></el-icon>
 						<span>合同管理</span>
 					</el-menu-item>
-					<el-menu-item index="7">
+					<el-menu-item index="operation_log">
 						<el-icon><icon-menu /></el-icon>
 						<span>操作日志</span>
 					</el-menu-item>
-					<el-menu-item index="8">
+					<el-menu-item index="login_log">
 						<el-icon><icon-menu /></el-icon>
 						<span>登录日志</span>
 					</el-menu-item>

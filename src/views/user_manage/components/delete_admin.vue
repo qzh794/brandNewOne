@@ -18,47 +18,52 @@
 		bus
 	} from "@/utils/mitt.js"
 	import {
-		changeIdentityToUser,deleteUser
+		changeIdentityToUser, deleteUser
 	} from '@/api/userinfor.js'
 	import { ElMessage } from 'element-plus'
+	import { tracking } from '@/utils/operation.js'
 	const adminid = ref()
 	const userid = ref()
-	const account =ref()
+	const account = ref()
+	const name = ref()
 	bus.on('deleteId', (id : number) => {
 		adminid.value = id
 	})
 	bus.on('deleteUserId', (userInfor : any) => {
 		userid.value = userInfor.id
 		account.value = userInfor.account
+		name.value = userInfor.name
 	})
-	const emit = defineEmits(['success'])
-	
+	// const emit = defineEmits(['success'])
+
 	const deleteAdmin = async () => {
-		if(adminid.value){
+		if (adminid.value) {
 			const res = await changeIdentityToUser(adminid.value)
 			if (res.status == 0) {
 				ElMessage({
 					message: '对管理员降职成功',
 					type: 'success',
 				})
-				emit('success')
+				// emit('success')
+				bus.emit('adminDialogOff', 3)
 				dialogFormVisible.value = false
 			} else {
 				ElMessage.error('对管理员降职失败')
 				dialogFormVisible.value = false
 			}
 		}
-		if(userid.value){
-			const res = await deleteUser(userid.value,account.value)
+		if (userid.value) {
+			const res = await deleteUser(userid.value, account.value)
 			if (res.status == 0) {
 				ElMessage({
 					message: '删除用户成功',
 					type: 'success',
 				})
+				tracking('管理员',localStorage.getItem('name'),name.value,'高级')
 				// 假设用户第二页 我们的用户为第一条数据 删除之后 页面变为第一页
 				// 假设用户第二页 我们的用户不为第一条数据 删除之后 页面依然为第二页
 				dialogFormVisible.value = false
-				bus.emit('offDialog',1)
+				bus.emit('offDialog', 1)
 			} else {
 				ElMessage.error('删除用户失败')
 				dialogFormVisible.value = false

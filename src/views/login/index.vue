@@ -76,6 +76,7 @@
 	import {
 		login, register
 	} from '@/api/login'
+	import { loginLog } from '@/api/log'
 	import { useUserInfor } from '@/store/userinfor'
 	const activeName = ref('first')
 	const router = useRouter()
@@ -100,7 +101,8 @@
 	// 登录
 	const Login = async () => {
 		const res = await login(loginData)
-		const { id } = res.results
+		// console.log(res)
+		const { id, name,account,email } = res.results
 		const { token } = res
 		if (res.message == "登录成功") {
 			ElMessage({
@@ -109,6 +111,8 @@
 			})
 			sessionStorage.setItem('id', id)
 			localStorage.setItem('token', token)
+			localStorage.setItem('name', name)
+			await loginLog(account,name,email)
 			store.userInfor(id)
 			// 跳转
 			router.push('/home')

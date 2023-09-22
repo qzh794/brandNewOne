@@ -66,7 +66,7 @@
 							</div>
 						</div>
 						<div class="table-footer">
-							<el-pagination :page-size="1" :ccurrent-page="paginationData.prodcutCurrentPage"
+							<el-pagination :page-size="1" :current-page="paginationData.prodcutCurrentPage"
 								:pager-count="7" :total="paginationData.productTotal"
 								:page-count="paginationData.prodcutpageCount" @current-change="ProductcurrentChange"
 								layout="prev, pager, next" />
@@ -123,9 +123,9 @@
 							</div>
 						</div>
 						<div class="table-footer">
-							<el-pagination :page-size="1" :ccurrent-page="paginationData.applyProductCurrentPage"
+							<el-pagination :page-size="1" :current-page="paginationData.applyProductCurrentPage"
 								:pager-count="7" :total="paginationData.applyProductTotal"
-								:page-count="paginationData.applyProductTotal"
+								:page-count="paginationData.applyProductCount"
 								@current-change="applyProductcurrentChange" layout="prev, pager, next" />
 						</div>
 					</div>
@@ -152,7 +152,7 @@
 <script lang='ts' setup>
 	import {
 		ref,
-		reactive
+		reactive,
 	} from 'vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
 	import inwarehouse from '../components/product_in_warehouse.vue'
@@ -163,8 +163,6 @@
 	import withdraw from '../components/withdraw.vue'
 	import again from '../components/again_apply.vue'
 	import {
-		getProductList,
-		applyProductList,
 		searchProductForId,
 		searchProductForApplyId,
 		getProductLength,
@@ -189,7 +187,6 @@
 		second: '产品列表'
 	})
 	const handleClick = (tab: TabsPaneContext) => {
-		// console.log(tab.props.label)
 		if (tab.props.label == '产品列表') {
 			getProductFirstPageList()
 		}
@@ -212,18 +209,20 @@
 	// 分页数据
 	const paginationData = reactive({
 		// 产品总数
-		productTotal: 1,
+		productTotal: 0,
 		// 产品列表总页数
-		prodcutpageCount: 1,
+		prodcutpageCount: 0,
 		// 产品列表当前所处页数
 		prodcutCurrentPage: 1,
 		// 申请的总数
-		applyProductTotal: 1,
+		applyProductTotal: 0,
 		// 申请列表总页数
-		applyProductCount: 1,
+		applyProductCount: 0,
 		// 申请列表当前所处页数
 		applyProductCurrentPage: 1,
 	})
+	
+	
 	// 获取产品列表的页数
 	const getProductListlength = async () => {
 		const res = await getProductLength()
@@ -266,22 +265,6 @@
 		paginationData.applyProductCurrentPage = value
 		tableData.value = await returnApplyProductListData(paginationData.applyProductCurrentPage)
 	}
-	// // 获取产品列表
-	// const getProductlist = async () => {
-	// 	tableData.value = await getProductList()
-	// }
-	// getProductlist()
-
-	// // 获取产品审核列表
-	// const getApplyProductList = async () => {
-	// 	applytableData.value = await applyProductList()
-	// }
-	// getApplyProductList()
-
-	// const changeProductlist = () => {
-	// 	getProductlist()
-	// 	getApplyProductList()
-	// }
 
 	// 通过产品入库ID去搜索
 	const searchProduct = async () => {
@@ -322,7 +305,7 @@
 	// 审核产品
 	const auditP = ref()
 	const auditProduct = (row: any) => {
-		bus.emit('deleteproductInfor', row)
+		bus.emit('applyproductInfor', row)
 		auditP.value.open()
 	}
 
@@ -342,55 +325,6 @@
 </script>
 
 <style lang="scss" scoped>
-	// 公共模块样式外壳
-	.module-common-wrapped {
-		padding: 8px;
-		background: #f5f5f5;
-		height: calc(100vh - 101px);
-
-		// 公共模块样式内容
-		.module-common-content {
-			padding: 0 10px;
-			height: 100%;
-			background: #fff;
-
-			// 分页内容
-			.pane-content {
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				height: calc(100vh - 166px);
-				background: #fff;
-
-				.pane-top {
-					.module-common-header {
-						padding: 0 20px;
-						display: flex;
-						align-items: center;
-						justify-content: space-between;
-
-					}
-
-					.module-common-table {
-						min-height: 10px;
-						padding: 10px 20px 20px;
-						margin-bottom: 8px;
-						background: #fff;
-					}
-				}
-
-				// 底部分页
-				.table-footer {
-					display: flex;
-					justify-content: flex-end;
-					background: #fff;
-				}
-
-			}
-		}
-
-	}
-
 	:deep(.el-table .cell) {
 		font-weight: 400;
 	}

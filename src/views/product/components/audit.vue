@@ -28,11 +28,13 @@
 	import {
 		useUserInfor
 	} from '@/store/userinfor.js'
+	import { tracking } from '@/utils/operation.js'
 	const userStore = useUserInfor()
 
-	bus.on('deleteproductInfor', (row : any) => {
+	bus.on('applyproductInfor', (row : any) => {
 		formData.id = row.id
 		formData.product_out_id = row.product_out_id
+		formData.product_name = row.product_name
 		formData.product_out_status = row.product_out_status
 		formData.audit_memo = row.audit_memo
 		formData.product_out_price = row.product_out_price
@@ -44,6 +46,7 @@
 
 	const formData = reactive({
 		id: 0,
+		product_name:'',
 		product_out_id: 0,
 		product_out_status: '',
 		audit_memo: '',
@@ -65,6 +68,7 @@
 				type: 'success',
 			})
 			emit('success')
+			tracking('产品', localStorage.getItem('name'), formData.product_name, '高级',formData.product_out_status)
 			dialogFormVisible.value = false
 		} else {
 			ElMessage.error('审核产品失败')

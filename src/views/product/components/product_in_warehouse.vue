@@ -11,8 +11,7 @@
 				</el-form-item>
 				<el-form-item label="产品类别" prop="product_category">
 					<el-select v-model="formData.product_category" placeholder="请选择产品类别">
-						<el-option label="食品类" value="食品类" />
-						<el-option label="服装类" value="服装类" />
+						<el-option v-for="item in categoryData" :key="item" :label="item" :value="item" />
 					</el-select>
 				</el-form-item>
 				<el-form-item label="产品单位" prop="product_unit">
@@ -49,15 +48,18 @@
 	import { reactive, ref } from 'vue'
 	import { createProduct } from '@/api/product'
 	import { ElMessage } from 'element-plus'
+	import {
+		getProduct
+	} from '@/api/setting'
 	const labelPosition = ref('left')
 	// const title = ref()
 
-	// 部门数据
-	// const departmentData = ref([])
-	// const getdepartment = async() => {
-	// 	departmentData.value = await getDepartment()
-	// }
-	// getdepartment()
+	// 产品类别数据
+	const categoryData = ref([])
+	const getproduct = async() => {
+		categoryData.value = await getProduct()
+	}
+	getproduct()
 	interface formData {
 		product_id : number,
 		product_name : string,
@@ -105,8 +107,8 @@
 	})
 	const emit = defineEmits(['success'])
 	// 产品出库
-	const addprodcut = async () => {
-		const res = await createProduct(formData)
+	const addprodcut = () => {
+		const res = createProduct(formData)
 		if (res.status == 0) {
 			ElMessage({
 				message: '产品入库成功',
@@ -130,7 +132,6 @@
 	defineExpose({
 		open
 	})
-
 </script>
 
 <style lang="scss" scoped>

@@ -78,7 +78,8 @@
 	const openDelete = (id : number) => {
 		let userInfor = {
 			id:id,
-			account:userData.account
+			account:userData.account,
+			name:userData.name
 		}
 		bus.emit('deleteUserId', userInfor)
 		deleteU.value.open()

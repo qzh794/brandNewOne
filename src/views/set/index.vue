@@ -143,7 +143,19 @@
 							<el-input v-if="inputVisible" ref="InputRef" v-model="inputValue" class="ml-1 w-20"
 								size="small" @keyup.enter="handleInputConfirm" @blur="handleInputConfirm" />
 							<el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
-								+ New Tag
+								+ 添加部门
+							</el-button>
+						</div>
+						<div class="product-set">
+							<span>产品设置</span>
+							<el-tag v-for="tag in dynamicProductTags" :key="tag" class="mx-1" closable
+								:disable-transitions="false" @close="handleProductClose(tag)">
+								{{ tag }}
+							</el-tag>
+							<el-input v-if="inputProductVisible" ref="InputProductRef" v-model="inputProductValue" class="ml-1 w-20"
+								size="small" @keyup.enter="handleInputProductConfirm" @blur="handleInputProductConfirm" />
+							<el-button v-else class="button-new-tag ml-1" size="small" @click="showProductInput">
+								+ 添加产品
 							</el-button>
 						</div>
 					</div>
@@ -196,7 +208,9 @@
 		changeCompanyName,
 		getAllSwiper,
 		setDepartment,
-		getDepartment
+		getDepartment,
+		setProduct,
+		getProduct
 	} from '@/api/setting'
 	import {
 		useUserInfor
@@ -387,12 +401,22 @@
 	const dynamicTags = ref()
 	const inputVisible = ref(false)
 	const InputRef = ref < InstanceType < typeof ElInput >> ()
+	// 产品设置
+	const inputProductValue = ref('')
+	const dynamicProductTags = ref()
+	const inputProductVisible = ref(false)
+	const InputProductRef = ref < InstanceType < typeof ElInput >> ()
 	// 获取部门数据
 	const getdepartment = async() => {
 		dynamicTags.value = await getDepartment()
 	}
 	getdepartment()
-	// 关闭时的函数
+	// 获取产品数据
+	const getproduct = async() => {
+		dynamicProductTags.value = await getProduct()
+	}
+	getproduct()
+	// 部门设置关闭时的函数
 	const handleClose = async (tag: string) => {
 		dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
 		const res = await setDepartment(JSON.stringify(toRaw(dynamicTags.value)))
@@ -405,14 +429,34 @@
 			ElMessage.error('删除部门失败，请重新输入！')
 		}
 	}
-	// 点击按钮出现输入框
+	// 产品设置关闭时的函数
+	const handleProductClose = async (tag: string) => {
+		dynamicProductTags.value.splice(dynamicProductTags.value.indexOf(tag), 1)
+		const res = await setProduct(JSON.stringify(toRaw(dynamicProductTags.value)))
+		if (res.status == 0) {
+			ElMessage({
+				message: '删除产品成功',
+				type: 'success',
+			})
+		} else {
+			ElMessage.error('删除产品失败，请重新输入！')
+		}
+	}
+	// 点击部门按钮出现输入框
 	const showInput = () => {
 		inputVisible.value = true
 		nextTick(() => {
 			InputRef.value!.input!.focus()
 		})
 	}
-	// 输入数据后的一个函数
+	// 点击产品按钮出现输入框
+	const showProductInput = () => {
+		inputProductVisible.value = true
+		nextTick(() => {
+			InputProductRef.value!.input!.focus()
+		})
+	}
+	// 输入数据后的一个函数 部门
 	const handleInputConfirm = async () => {
 		if (inputValue.value) {
 			dynamicTags.value.push(inputValue.value)
@@ -428,6 +472,23 @@
 		}
 		inputVisible.value = false
 		inputValue.value = ''
+	}
+	// 输入数据后的一个函数 产品
+	const handleInputProductConfirm = async () => {
+		if (inputProductValue.value) {
+			dynamicProductTags.value.push(inputProductValue.value)
+			const res = await setProduct(JSON.stringify(toRaw(dynamicProductTags.value)))
+			if (res.status == 0) {
+				ElMessage({
+					message: '添加产品设置成功',
+					type: 'success',
+				})
+			} else {
+				ElMessage.error('添加产品失败，请重新输入！')
+			}
+		}
+		inputProductVisible.value = false
+		inputProductValue.value = ''
 	}
 </script>
 
@@ -512,6 +573,13 @@
 		.department-set {
 			margin-bottom: 24px;
 
+			span {
+				margin-right: 24px;
+			}
+		}
+		
+		.product-set {
+			
 			span {
 				margin-right: 24px;
 			}
