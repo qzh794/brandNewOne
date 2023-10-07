@@ -13,7 +13,7 @@
 		<!-- 栅格布局外壳 -->
 		<div class="layout-wrapped">
 			<el-row :gutter="20">
-				<el-col :span="6" v-for="(item,index) in companyIntroduce" :key='index'  @click="openIntrouce(index+1)">
+				<el-col :span="6" v-for="(item,index) in companyIntroduce" :key='index' @click="openIntrouce(index+1)">
 					<div class="company-message-area">
 						<span>{{item.set_name}}</span>
 						<div v-html='item.set_text' class="company-introduce"></div>
@@ -26,25 +26,46 @@
 			<!-- 公司公告 -->
 			<div class="company-notice">
 				<span class="title">公司公告</span>
-				<el-table :data="tableData" style="width: 100%" :show-header='false'>
-					<el-table-column prop="date" label="Date" width="180" />
-					<el-table-column prop="name" label="Name" width="180" />
-					<el-table-column prop="address" label="Address" />
+				<el-table :data="companyData" style="width: 100%" :show-header='false' @row-dblclick="openCompany">
+					<el-table-column prop="message_title" label="公告主题">
+						<template #default='{row}'>
+							<div class="message_title">{{row.message_title}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column prop="message_level" label="等级">
+						<template #default='{row}'>
+							<el-tag class="mx-1" round v-if="row.message_level=='一般'">{{row.message_level}}</el-tag>
+							<el-tag type="warning" class="mx-1" round
+								v-if="row.message_level=='重要'">{{row.message_level}}</el-tag>
+							<el-tag type="danger" class="mx-1" round
+								v-if="row.message_level=='必要'">{{row.message_level}}</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column prop="message_publish_department" label="发布部门" />
+					<el-table-column prop="message_publish_time" label="发布时间" width="200">
+						<template #default="{row}">
+							<div>{{row.message_publish_time?.slice(0,10)}}</div>
+						</template>
+					</el-table-column>
 				</el-table>
 			</div>
 			<!-- 系统消息 -->
 			<div class="system-message">
 				<span class="title">系统消息</span>
-				<el-table :data="tableData" style="width: 100%" :show-header='false'>
-					<el-table-column prop="date" label="Date" width="180" />
-					<el-table-column prop="name" label="Name" width="180" />
-					<el-table-column prop="address" label="Address" />
+				<el-table :data="systemData" style="width: 100%" :show-header='false' @row-dblclick="openSystem">
+					<el-table-column prop="message_title" label="公告主题"  />
+					<el-table-column prop="message_publish_time" label="发布时间" width="200">
+						<template #default="{row}">
+							<div>{{row.message_publish_time?.slice(0,10)}}</div>
+						</template>
+					</el-table-column>
 				</el-table>
 			</div>
 		</div>
 
 	</div>
 	<introduce ref="intro"></introduce>
+	<commonmsg ref="cmsg"></commonmsg>
 </template>
 
 <script lang="ts" setup>
@@ -53,16 +74,24 @@
 	import { getAllSwiper, getAllCompanyIntroduce } from '@/api/setting'
 	import { bus } from "@/utils/mitt.js"
 	import introduce from './components/introduce.vue'
+	import { companyMessageList,systemMessageList} from '@/api/message'
+	import commonmsg from '@/components/common_msg.vue'
 	// 面包屑
 	const breadcrumb = ref()
 	// 面包屑参数
 	const item = ref({
 		first: '首页',
 	})
-
-	const tableData = [
-	]
-
+	// 公司公告
+	const companyData = ref()
+	// 系统消息
+	const systemData = ref()
+	
+	const getMessageList = async () =>{
+		companyData.value = await companyMessageList()
+		systemData.value = await systemMessageList()
+	}
+	getMessageList()
 	// 轮播图
 	const imageUrl = ref([])
 	// 获取轮播图
@@ -85,9 +114,19 @@
 	// 弹窗
 	const intro = ref()
 	const openIntrouce = (id : number) => {
-		console.log(id)
 		bus.emit('introduce', id)
 		intro.value.open()
+	}
+	
+	const cmsg = ref()
+	const openCompany = (row:any) =>{
+		bus.emit('homeCompany',row)
+		cmsg.value.open()
+	}
+	
+	const openSystem = (row:any) =>{
+		bus.emit('homeSystem',row)
+		cmsg.value.open()
 	}
 </script>
 
@@ -182,6 +221,12 @@
 				border-bottom: 1px solid #ea0709;
 			}
 		}
+	}
+
+	.message_title {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	// 轮播图默认样式

@@ -102,16 +102,17 @@
 	const Login = async () => {
 		const res = await login(loginData)
 		// console.log(res)
-		const { id, name,account,email } = res.results
+		const { id, name,account,email,department } = res.results
 		const { token } = res
 		if (res.message == "登录成功") {
 			ElMessage({
 				message: '登录成功',
 				type: 'success',
 			})
-			sessionStorage.setItem('id', id)
+			localStorage.setItem('id', id)
 			localStorage.setItem('token', token)
 			localStorage.setItem('name', name)
+			localStorage.setItem('department', department)
 			await loginLog(account,name,email)
 			store.userInfor(id)
 			// 跳转

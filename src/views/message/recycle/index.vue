@@ -17,7 +17,7 @@
 					<el-table-column label="操作" width="200" fixed="right">
 						<template #default="{row}">
 							<div>
-								<el-button type="success" @click="renew(row.id)">还原</el-button>
+								<el-button type="success" @click="renew(row)">还原</el-button>
 								<el-button type="danger" @click="realDelete(row.id)">删除</el-button>
 							</div>
 						</template>
@@ -91,8 +91,8 @@
 	// getRecycleList()
 	// 恢复跟删除 组件
 	const rad = ref()
-	const renew = (id:number) => {
-		bus.emit("renewID",id)
+	const renew = (row:any) => {
+		bus.emit("renewID",row)
 		rad.value.open()
 	}
 	

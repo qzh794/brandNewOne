@@ -218,7 +218,7 @@
 	const userStore = useUserInfor()
 
 	onMounted(async () => {
-		let id = sessionStorage.getItem('id')
+		let id = localStorage.getItem('id')
 		const res = await getUserInfor(id)
 		userData.account = res.account
 		userData.name = res.name
@@ -295,7 +295,7 @@
 	}
 	// 保存姓名	
 	const saveName = async () => {
-		const res = await changeName(userData.name, sessionStorage.getItem('id'))
+		const res = await changeName(userData.name, localStorage.getItem('id'))
 		if (res.status == 0) {
 			ElMessage({
 				message: '修改成功',
@@ -308,7 +308,7 @@
 
 	// 保存性别
 	const saveSex = async () => {
-		const res = await changeSex(userData.sex, sessionStorage.getItem('id'))
+		const res = await changeSex(userData.sex, localStorage.getItem('id'))
 		if (res.status == 0) {
 			ElMessage({
 				message: '修改成功',
@@ -321,7 +321,7 @@
 
 	// 保存邮箱
 	const saveEmail = async () => {
-		const res = await changeEmail(userData.email, sessionStorage.getItem('id'))
+		const res = await changeEmail(userData.email, localStorage.getItem('id'))
 		if (res.status == 0) {
 			ElMessage({
 				message: '修改成功',

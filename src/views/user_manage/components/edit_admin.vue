@@ -19,8 +19,7 @@
 				</el-form-item>
 				<el-form-item label="部门" prop="department">
 					<el-select v-model="formData.department" placeholder="请选择部门">
-						<el-option label="总裁办" value="总裁办" />
-						<el-option label="项目部" value="项目部" />
+						<el-option v-for="item in departmentData" :key="item" :label="item" :value="item" />
 					</el-select>
 				</el-form-item>
 			</el-form>
@@ -43,6 +42,7 @@
 	import {
 		getUserInfor, editAdmin
 	} from '@/api/userinfor.js'
+	import {getDepartment } from '@/api/setting'
 	import { ElMessage } from 'element-plus'
 	bus.on('editId', async (id : number) => {
 		const res = await getUserInfor(id)
@@ -53,6 +53,13 @@
 		formData.email = res.email
 		formData.department = res.department
 	})
+	
+	// 部门数据
+	const departmentData = ref([])
+	const getdepartment = async() => {
+		departmentData.value = await getDepartment()
+	}
+	getdepartment()
 
 	interface formData {
 		id ?: number,

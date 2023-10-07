@@ -49,7 +49,7 @@
 										<template #default="{row}">
 											<div>
 												<el-button type="success" @click="editMessage(row)">编辑</el-button>
-												<el-button type="danger" @click="deleteMessage(row.id)">删除</el-button>
+												<el-button type="danger" @click="deleteMessage(row)">删除</el-button>
 											</div>
 										</template>
 									</el-table-column>
@@ -264,8 +264,8 @@
 
 	const deletem = ref()
 	// 删除公司公告/系统消息
-	const deleteMessage = (id: number) => {
-		bus.emit('deleteMessageId', id)
+	const deleteMessage = (row: any) => {
+		bus.emit('deleteMessageId', row)
 		deletem.value.open()
 	}
 </script>

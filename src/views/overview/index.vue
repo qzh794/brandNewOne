@@ -9,7 +9,7 @@
 				<!-- 用户头像外壳 -->
 				<div class="person-avatar-wrapped">
 					<el-avatar :size="100" :src="userStore.imageUrl" />
-					<span class="department">所属部门：总裁办</span>
+					<span class="department">所属部门：{{userData.department}}</span>
 					<div class="company">所属公司：济南晏鲸创意设计有限公司</div>
 				</div>
 				<!-- 竖线 -->
@@ -34,25 +34,25 @@
 				<div class="title">常用管理</div>
 				<el-row :gutter="20">
 					<el-col :span="6">
-						<div class="button-area">
+						<div class="button-area" @click="routerTo('users_manage')">
 							<SvgIcon icon-name="user" style="width: 24px;height: 24px;"></SvgIcon>
 							<span class="button-name">用户管理</span>
 						</div>
 					</el-col>
 					<el-col :span="6">
-						<div class="button-area">
+						<div class="button-area" @click="routerTo('product_manage_list')">
 							<SvgIcon icon-name="product" style="width: 24px;height: 24px;"></SvgIcon>
 							<span class="button-name">产品管理</span>
 						</div>
 					</el-col>
 					<el-col :span="6">
-						<div class="button-area">
+						<div class="button-area" @click="routerTo('message_list')">
 							<SvgIcon icon-name="notice" style="width: 24px;height: 24px;"></SvgIcon>
 							<span class="button-name">系统消息</span>
 						</div>
 					</el-col>
 					<el-col :span="6">
-						<div class="button-area">
+						<div class="button-area" @click="routerTo('set')">
 							<SvgIcon icon-name="me" style="width: 24px;height: 24px;"></SvgIcon>
 							<span class="button-name">个人信息</span>
 						</div>
@@ -64,7 +64,7 @@
 						</div>
 					</el-col>
 					<el-col :span="6">
-						<div class="button-area">
+						<div class="button-area" @click="routerTo('set')">
 							<SvgIcon icon-name="set" style="width: 24px;height: 24px;"></SvgIcon>
 							<span class="button-name">系统设置</span>
 						</div>
@@ -90,8 +90,17 @@
 	import SvgIcon from '@/components/SvgIcon.vue'
 	import * as echarts from 'echarts';
 	import {
+		useRouter
+	} from 'vue-router'
+	import {
 		useUserInfor
 	} from '@/store/userinfor.js'
+	import {
+		getCategoryAndNumber,
+		getAdminAndNumber,
+		getLevelAndNumber,
+		getDayAndNumber
+	} from '@/api/overview.js'
 	import {
 		getUserInfor
 	} from '@/api/userinfor.js'
@@ -108,31 +117,42 @@
 	const item = ref({
 		first: '系统概览',
 	})
+	const router = useRouter()
 
-	// 获取用户信息
-	const getUserinfor = async () =>{
-		const res = await getUserInfor(sessionStorage.getItem('id'))
-		console.log(res)
+	const routerTo = (x: string) => {
+		router.push(`\/${x}`)
+	}
+	// // 获取用户信息
+	const getUserinfor = async () => {
+		const res = await getUserInfor(localStorage.getItem('id'))
+		userData.name = res.name
+		userData.sex = res.sex
+		userData.identity = res.identity
+		userData.department = res.department
 	}
 	getUserinfor()
-	
+
 	interface userData {
-		name:string,
-		sex:string,
-		identity:string,
-		department:string,
+		name: string,
+		sex: string,
+		identity: string,
+		department: string,
 	}
-	
-	const userData : userData = reactive({
-		name:'',
-		sex:'',
-		identity:'',
-		department:'',
+
+	const userData: userData = reactive({
+		name: '',
+		sex: '',
+		identity: '',
+		department: '',
 	})
 	// 管理员与用户比值图
-	const manageUser = () => {
+	// const data = ref()
+	const manageUser = async () => {
 		// 通过类名 初始化
 		const mu = echarts.init(document.querySelector('.manage-user'))
+		mu.showLoading()
+		let data = await getAdminAndNumber()
+		mu.hideLoading()
 		document.querySelector('.manage-user').setAttribute('_echarts_instance_', '')
 		// 设置基本的参数
 		mu.setOption({
@@ -153,27 +173,7 @@
 				// name: 'Access From',
 				type: 'pie',
 				radius: '65%',
-				data: [{
-						value: 1048,
-						name: 'Search Engine'
-					},
-					{
-						value: 735,
-						name: 'Direct'
-					},
-					{
-						value: 580,
-						name: 'Email'
-					},
-					{
-						value: 484,
-						name: 'Union Ads'
-					},
-					{
-						value: 300,
-						name: 'Video Ads'
-					}
-				],
+				data: data.data,
 				emphasis: {
 					itemStyle: {
 						shadowBlur: 10,
@@ -192,6 +192,9 @@
 	// 产品类别图
 	const productCategoryBar = async () => {
 		const pcb = echarts.init(document.querySelector('.product-category-bar'))
+		pcb.showLoading()
+		let data = await getCategoryAndNumber()
+		pcb.hideLoading()
 		document.querySelector('.product-category-bar').setAttribute('_echarts_instance_', '')
 		pcb.setOption({
 			title: {
@@ -207,13 +210,13 @@
 			xAxis: {
 				type: 'category',
 				// 食品类，服装类，鞋帽类，日用品类，家具类，家用电器类，纺织品类，五金类
-				data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+				data: data.category
 			},
 			yAxis: {
 				type: 'value'
 			},
 			series: [{
-				data: [120, 200, 150, 80, 70, 110, 130],
+				data: data.price,
 				type: 'bar',
 				barWidth: 40,
 				colorBy: "data"
@@ -225,8 +228,11 @@
 	}
 
 	// 公告等级分布图
-	const massageLevel = () => {
+	const massageLevel = async () => {
 		const ml = echarts.init(document.querySelector('.massage-level'))
+		ml.showLoading()
+		let data = await getLevelAndNumber()
+		ml.hideLoading()
 		document.querySelector('.massage-level').setAttribute('_echarts_instance_', '')
 		ml.setOption({
 			title: {
@@ -267,27 +273,7 @@
 				labelLine: {
 					show: false
 				},
-				data: [{
-						value: 1048,
-						name: 'Search Engine'
-					},
-					{
-						value: 735,
-						name: 'Direct'
-					},
-					{
-						value: 580,
-						name: 'Email'
-					},
-					{
-						value: 484,
-						name: 'Union Ads'
-					},
-					{
-						value: 300,
-						name: 'Video Ads'
-					}
-				],
+				data: data.data,
 			}]
 		})
 		window.addEventListener('resize', function() {
@@ -296,25 +282,12 @@
 	}
 
 	// 消息每日总量图
-	const massageAllDay = () => {
-		// 	// 底部日期的实现
-		// 		let dd = new Date()
-		// 		let week = []
-		// 		for (let i = 1; i < 8; i++) {
-		// 			dd.setDate(dd.getDate() - 1)
-		// 			// 得到日期并且把斜杠替换成横杠
-		// 			week.push(dd.toLocaleDateString().replace(/\//g, "-"))
-		// 		}
+	const massageAllDay = async () => {
 
-		// 		let number = []
-		// 		week.forEach(async (e) => {
-		// 			// 如果在Moment中不加'YYYY-MM-DD'会提示警告
-		// 			let day = moment(e, 'YYYY-MM-DD').format('YYYY-MM-DD')
-		// 			// 调用每天登录人数的接口
-		// 			const res = await everydaynumberofpeople(day)
-		// 			number.push(res.number)
-		// 		})
 		const mad = echarts.init(document.querySelector('.userlogin-week'))
+		mad.showLoading()
+		let data = await getDayAndNumber()
+		mad.hideLoading()
 		document.querySelector('.userlogin-week').setAttribute('_echarts_instance_', '')
 		mad.setOption({
 			title: {
@@ -329,13 +302,13 @@
 			},
 			xAxis: {
 				type: 'category',
-				data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+				data: data.week
 			},
 			yAxis: {
 				type: 'value'
 			},
 			series: [{
-				data: [150, 230, 224, 218, 135, 147, 260],
+				data: data.number,
 				type: 'line'
 			}]
 		})

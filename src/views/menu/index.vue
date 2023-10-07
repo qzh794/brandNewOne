@@ -82,11 +82,14 @@
 			</el-aside>
 			<el-container>
 				<el-header>
-					<span class="header-left-content">尊敬的 {{userStore.name}} 欢迎您登录本系统</span>
+					<span class="header-left-content">尊敬的 {{name}} 欢迎您登录本系统</span>
 					<div class="header-right-content">
-						<el-icon :size="20">
-							<Message />
-						</el-icon>
+						<el-badge :is-dot='msgStore.read_list.length> 0 ? true : false' class="item"
+							@click="openDepartmentMessage">
+							<el-icon :size="20" class="message">
+								<Message />
+							</el-icon>
+						</el-badge>
 						<el-avatar :size="24" :src="userStore.imageUrl" />
 						<el-dropdown>
 							<span class="el-dropdown-link">
@@ -109,22 +112,47 @@
 			</el-container>
 		</el-container>
 	</div>
+	<departmentMsg ref="departmentmsg" ></departmentMsg>
 </template>
 
 <script lang="ts" setup>
-	import { reactive, toRefs, ref } from 'vue'
+	import { ref } from 'vue'
 	import {
 		Menu as IconMenu,
 	} from '@element-plus/icons-vue'
+	import departmentMsg from '@/components/department_message.vue'
+	// import { getReadListAndStatus } from '@/api/dep_msg.js'
 	import { useRouter } from 'vue-router'
 	import {
 		useUserInfor
 	} from '@/store/userinfor.js'
+	import {
+		useMsg
+	} from '@/store/message.js'
+	const msgStore = useMsg()
 	const userStore = useUserInfor()
 	const router = useRouter()
+	const name = localStorage.getItem('name')
 
 	const goLogin = () => {
 		router.push('/login')
+	}
+
+	// const noread = ref(false)
+	// const getUserReadList = async () => {
+	// 	const res = await getReadListAndStatus(localStorage.getItem('id'))
+	// 	if(JSON.parse(res[0].read_list) > 0){
+	// 		noread.value = true
+	// 	}else{
+	// 		noread.value = false
+	// 	}
+	// }
+	// getUserReadList()
+	// 部门消息弹框
+	// const props = defineProps(['foo'])
+	const departmentmsg = ref()
+	const openDepartmentMessage = () => {
+		departmentmsg.value.open()
 	}
 </script>
 
@@ -182,6 +210,11 @@
 			justify-content: space-around;
 			align-items: center;
 		}
+	}
+
+	// 徽章
+	.item {
+		cursor: pointer;
 	}
 
 	.el-main {

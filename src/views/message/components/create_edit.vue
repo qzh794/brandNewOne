@@ -13,11 +13,12 @@
 					</el-select>
 				</el-form-item>
 				<el-form-item label="发布人" prop='message_publish_name'>
-					<el-input v-model="formData.message_publish_name" disabled/>
+					<el-input v-model="formData.message_publish_name" disabled />
 				</el-form-item>
 				<el-form-item label="接收部门" prop='message_receipt_object' v-if="title=='发布公告'||title=='编辑公告'">
 					<el-select v-model="formData.message_receipt_object" placeholder="请选择接收部门">
-						<el-option v-for="item in alloptions" :key="item.value" :label="item.value" :value="item.value" />
+						<el-option v-for="item in alloptions" :key="item.value" :label="item.value"
+							:value="item.value" />
 					</el-select>
 				</el-form-item>
 				<el-form-item label="公告等级" prop='message_level' v-if="title=='发布公告'||title=='编辑公告'">
@@ -61,12 +62,16 @@
 		bus
 	} from "@/utils/mitt.js"
 	import { ElMessage } from 'element-plus'
+	import { changeUserReadList } from '@/api/dep_msg.js'
+	import {
+		useMsg
+	} from '@/store/message.js'
+	const msgStore = useMsg()
 	// 标题
 	const title = ref()
 
 	const labelPosition = ref('left')
 	bus.on('createMessage', (id : number) => {
-		console.log(id)
 		if (id == 1) {
 			title.value = "发布公告"
 		}
@@ -85,19 +90,19 @@
 		const res = await getDepartment()
 		const data = []
 		const datas = []
-		for(let i  = 0;i<res.length;i++){
+		for (let i = 0; i < res.length; i++) {
 			let obj = {
-				value:res[i]
+				value: res[i]
 			}
 			data.push(obj)
 			datas.push(obj)
 		}
 		options.value = data
-		datas.push({value:"全体成员"})
+		datas.push({ value: "全体成员" })
 		alloptions.value = datas
 	}
 	getdepartment()
-	
+
 	bus.on('editMessage', (row : any) => {
 		title.value = "编辑公告"
 		formData.id = row.id
@@ -227,6 +232,8 @@
 			formData.message_category = '公司公告'
 			const res = await publishMessage(formData)
 			if (res.status == 0) {
+				await changeUserReadList(res.id, formData.message_receipt_object)
+				msgStore.returnReadList(localStorage.getItem('id'))
 				ElMessage({
 					message: '发布公告成功',
 					type: 'success',
@@ -239,7 +246,6 @@
 			}
 		}
 		if (title.value == '编辑公告') {
-
 			const res = await editMessage(formData)
 			if (res.status == 0) {
 				ElMessage({

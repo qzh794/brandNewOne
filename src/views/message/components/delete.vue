@@ -1,8 +1,8 @@
 <template>
 	<el-dialog v-model="dialogFormVisible" :title='title' width="30%" center>
-		<span v-if="title.value=='删除信息'">您确定要删除这个公告吗？</span>
-		<span v-else-if="title.value=='恢复消息'">您确定要恢复这个公告吗？</span>
-		<span v-else="title.value=='真正删除信息'">请慎重操作！您确定要真正删除这个公告吗？</span>
+		<span v-if="title.value=='删除信息'" v-html="tips"></span>
+		<span v-else-if="title.value=='恢复消息'" v-html="tips"></span>
+		<span v-else="title.value=='真正删除信息'" v-html="tips"></span>
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button type="primary" @click="operationMessage">
@@ -22,20 +22,31 @@
 		fisrtDelete, recover, deleteMessage
 	} from '@/api/message.js'
 	import { ElMessage } from 'element-plus'
+	import {changeUserReadListButDelete,changeUserReadList} from '@/api/dep_msg.js'
+	import {
+		useMsg
+	} from '@/store/message.js'
+	const msgStore = useMsg()
 	const title = ref()
+	const tips = ref()
 	// 消息ID
 	const messageid = ref()
-
-	bus.on('deleteMessageId', (id : number) => {
+	const department = ref()
+	bus.on('deleteMessageId', (row : any) => {
 		title.value = '删除信息'
-		messageid.value = id
+		tips.value = '您确定要删除这个公告吗？'
+		messageid.value = row.id
+		department.value = row.message_receipt_object
 	})
-	bus.on('renewID', (id : number) => {
+	bus.on('renewID', (row : any) => {
 		title.value = '恢复消息'
-		messageid.value = id
+		tips.value = '您确定要恢复这个公告吗？'
+		messageid.value =row.id
+		department.value = row.message_receipt_object
 	})
 	bus.on('realDelete', (id : number) => {
 		title.value = '真正删除信息'
+		tips.value = '请慎重操作！您确定要真正删除这个公告吗？'
 		messageid.value = id
 	})
 	const emit = defineEmits(['success'])
@@ -44,6 +55,8 @@
 		if (title.value == '删除信息') {
 			const res = await fisrtDelete(messageid.value)
 			if (res.status == 0) {
+				await changeUserReadListButDelete(messageid.value,department.value)
+				msgStore.returnReadList(localStorage.getItem('id'))
 				ElMessage({
 					message: '删除公告成功',
 					type: 'success',
@@ -58,6 +71,8 @@
 		if (title.value == '恢复消息') {
 			const res = await recover(messageid.value)
 			if (res.status == 0) {
+				await changeUserReadList(messageid.value,department.value)
+				msgStore.returnReadList(localStorage.getItem('id'))
 				ElMessage({
 					message: '恢复公告成功',
 					type: 'success',
