@@ -80,6 +80,7 @@
 		}
 
 	})
+	// const message_receipt_object = ref()
 	// 不包括全体成员
 	const options = ref([])
 	// 包括全体成员
@@ -247,6 +248,7 @@
 		}
 		if (title.value == '编辑公告') {
 			const res = await editMessage(formData)
+			msgStore.returnReadList(localStorage.getItem('id'))
 			if (res.status == 0) {
 				ElMessage({
 					message: '编辑公告成功',
