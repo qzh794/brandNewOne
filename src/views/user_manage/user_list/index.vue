@@ -65,7 +65,7 @@
 		</div>
 		<!-- 底部 -->
 		<div class="table-footer">
-			<el-pagination :page-size="1" :ccurrent-page="paginationData.currentPage" :pager-count="7"
+			<el-pagination :page-size="1" :current-page="paginationData.currentPage" :pager-count="7"
 				:total="adminTotal" :page-count="paginationData.pageCount" @current-change="currentChange"
 				layout="prev, pager, next" />
 		</div>
