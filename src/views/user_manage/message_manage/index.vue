@@ -104,15 +104,15 @@
 		const current = paginationData.currentPage
 		// 1为创建管理员
 		if (id == 1) {
-			getAdminListlength()
+			getFirstPageList()
 		}
 		// 2为编辑管理员
 		if (id == 2) {
-			tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
+			tableData.value = await returnListData(paginationData.currentPage, '消息管理员')
 		}
 		// 3为对管理员进行降职
 		if (id == 3) {
-			tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
+			tableData.value = await returnListData(paginationData.currentPage, '消息管理员')
 			if (tableData.value.length == 0) {
 				paginationData.currentPage = current - 1
 				getAdminListlength()

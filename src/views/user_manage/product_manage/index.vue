@@ -113,7 +113,7 @@
 		const current = paginationData.currentPage
 		// 1为创建管理员
 		if (id == 1) {
-			getAdminListlength()
+			getFirstPageList()
 		}
 		// 2为编辑管理员
 		if (id == 2) {
