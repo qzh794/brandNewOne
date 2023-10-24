@@ -71,7 +71,7 @@
 	const tableData = ref()
 	// 搜索函数
 	const searchAdmin = async () => {
-		tableData.value = await searchUser(adminAccount.value)
+		tableData.value = await searchUser(adminAccount.value,'消息管理员')
 	}
 	// 分页数据
 	const paginationData = reactive({

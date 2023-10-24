@@ -26,7 +26,7 @@
 		</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="edituser">
+				<el-button type="primary" @click="editadmin">
 					确定
 				</el-button>
 			</span>
@@ -39,26 +39,30 @@
 	import {
 		bus
 	} from "@/utils/mitt.js"
-	import { editAdmin,getUserInfor } from '@/api/userinfor.js'
+	import {
+		getUserInfor, editAdmin
+	} from '@/api/userinfor.js'
 	import { getDepartment } from '@/api/setting'
 	import { ElMessage } from 'element-plus'
 	bus.on('editId', async (id : number) => {
 		const res = await getUserInfor(id)
-		formData.id = id
+		formData.id = res.id
 		formData.account = res.account
 		formData.name = res.name
 		formData.sex = res.sex
 		formData.email = res.email
 		formData.department = res.department
 	})
+
 	// 部门数据
 	const departmentData = ref([])
 	const getdepartment = async () => {
 		departmentData.value = await getDepartment()
 	}
 	getdepartment()
+
 	interface formData {
-		id:number,
+		id ?: number,
 		account : number,
 		name : string,
 		sex : string,
@@ -67,7 +71,7 @@
 	}
 
 	const formData : formData = reactive({
-		id: 0,
+		id: null,
 		account: null,
 		name: '',
 		sex: '',
@@ -90,28 +94,26 @@
 			{ required: true, message: '请输入要修改的部门', trigger: 'blur' },
 		],
 	})
-	const emit = defineEmits(['success'])
-	// 编辑用户
-	const edituser = async () => {
+	// 编辑用户信息
+	const editadmin = async () => {
 		const res = await editAdmin(formData)
-		console.log(res)
 		if (res.status == 0) {
 			ElMessage({
-				message: '创建管理员成功',
+				message: '编辑用户信息成功',
 				type: 'success',
 			})
 			bus.emit('offDialog',1)
-			emit('success')
 			dialogFormVisible.value = false
 		} else {
-			ElMessage.error('创建管理员失败')
+			ElMessage.error('编辑用户信息失败')
 			dialogFormVisible.value = false
 		}
 	}
+
 	// 弹窗开关
 	const dialogFormVisible = ref(false)
 
-	// 打开创建管理员的弹窗
+	// 打开编辑管理员的弹窗
 	const open = () => {
 		dialogFormVisible.value = true
 	}

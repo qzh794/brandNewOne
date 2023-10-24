@@ -20,30 +20,27 @@
 		deleteFlie
 	} from '@/api/file.js'
 	import { ElMessage } from 'element-plus'
-	const title = ref()
 	// 消息ID
 	const fileid = ref()
-
-	bus.on('deleteFile', (id : number) => {
-		title.value = '删除文件'
-		fileid.value = id
+	const filename = ref()
+	bus.on('deleteFile', (row : any) => {
+		fileid.value = row.id
+		filename.value = row.file_name
 	})
 	const emit = defineEmits(['success'])
 
 	const operationFiles = async () => {
-		if (title.value == '删除文件') {
-			const res = await deleteFlie(fileid.value)
-			if (res.status == 0) {
-				ElMessage({
-					message: '删除文件成功',
-					type: 'success',
-				})
-				emit('success')
-				dialogFormVisible.value = false
-			} else {
-				ElMessage.error('删除文件失败')
-				dialogFormVisible.value = false
-			}
+		const res = await deleteFlie(fileid.value,filename.value)
+		if (res.status == 0) {
+			ElMessage({
+				message: '删除文件成功',
+				type: 'success',
+			})
+			emit('success')
+			dialogFormVisible.value = false
+		} else {
+			ElMessage.error('删除文件失败')
+			dialogFormVisible.value = false
 		}
 	}
 

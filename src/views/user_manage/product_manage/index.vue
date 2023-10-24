@@ -8,7 +8,7 @@
 				<!-- 搜索框 -->
 				<div class="search-wrapped">
 					<el-input v-model="adminAccount" class="w-50 m-2" size="large" placeholder="输入账号进行搜索"
-						:prefix-icon="Search" @change='searchAdmin()' />
+						:prefix-icon="Search" @change='searchAdmin()' clearable @clear="clearInput()" />
 				</div>
 				<div class="button-wrapped">
 					<el-button type="primary" @click="openCreate(1)">添加产品管理员</el-button>
@@ -23,7 +23,7 @@
 					<el-table-column prop="sex" label="性别" />
 					<el-table-column prop="department" label="部门" />
 					<el-table-column prop="email" label="邮箱" />
-					<el-table-column prop="update_time" label="更新时间" >
+					<el-table-column prop="update_time" label="更新时间">
 						<template #default="{row}">
 							<div>{{row.update_time?.slice(0,10)}}</div>
 						</template>
@@ -67,21 +67,25 @@
 	} from "@/utils/mitt.js"
 	import { searchUser, getAdminListLength, returnListData } from '@/api/userinfor.js'
 
+
 	// 面包屑
 	const breadcrumb = ref()
 	// 面包屑参数
 	const item = ref({
 		first: '用户管理',
-		second:'产品管理员'
+		second: '产品管理员'
 	})
 	// 搜索框的modelValue
 	const adminAccount = ref<number>()
 	// 表格内容
 	const tableData = ref()
 
+	// 搜索内容
 	const searchAdmin = async () => {
-		tableData.value = await searchUser(adminAccount.value)
+		tableData.value = await searchUser(adminAccount.value, '产品管理员')
+		paginationData.pageCount = 1
 	}
+
 	// 分页数据
 	const paginationData = reactive({
 		// 总页数
@@ -105,6 +109,11 @@
 	// 监听换页
 	const currentChange = async (value : number) => {
 		paginationData.currentPage = value
+		tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
+	}
+	
+	// 当搜索内容清空后,返回当前页面的数据
+	const clearInput = async () =>{
 		tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
 	}
 
@@ -152,7 +161,7 @@
 		bus.emit('deleteId', id)
 		Delete.value.open()
 	}
-	
+
 	onBeforeUnmount(() => {
 		bus.all.clear()
 	})

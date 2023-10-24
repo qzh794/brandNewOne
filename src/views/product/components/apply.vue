@@ -11,11 +11,11 @@
 					<el-form-item label="出库数量" prop="product_out_number">
 						<el-input v-model="formData.product_out_number" />
 					</el-form-item>
+					<el-form-item label="出库申请人" prop="product_out_apply_person">
+						<el-input v-model="formData.product_out_apply_person" disabled/>
+					</el-form-item>
 					<el-form-item label="产品单价" prop="product_single_price">
 						<el-input v-model="formData.product_single_price" disabled/>
-					</el-form-item>
-					<el-form-item label="出库申请人" prop="product_out_apply_person">
-						<el-input v-model="formData.product_out_apply_person" />
 					</el-form-item>
 					<el-form-item label="申请出库备注" prop="apply_memo">
 						<el-input v-model="formData.apply_memo" :rows="2" type="textarea" />
@@ -24,7 +24,7 @@
 			</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="addprodcut">
+				<el-button type="primary" @click="addprodcut" :disabled='formData.product_inwarehouse_number<formData.product_out_number'>
 					确定
 				</el-button>
 			</span>
@@ -74,7 +74,7 @@
 		product_inwarehouse_number:null,
 		product_single_price:null,
 		product_out_number: null,
-		product_out_apply_person: '',
+		product_out_apply_person: localStorage.getItem('name'),
 		apply_memo: ''
 	})
 

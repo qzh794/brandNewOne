@@ -75,7 +75,7 @@
 
 <script lang="ts" setup>
 	import {
-		ref, reactive,onBeforeUnmount
+		ref, reactive,onBeforeUnmount,
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
@@ -101,10 +101,9 @@
 	const adminAccount = ref<number>()
 	// 表格内容
 	const tableData = ref()
-
 	// 通过账号进行搜索
 	const searchuser = async () => {
-		tableData.value = await searchUser(adminAccount.value)
+		tableData.value = await searchUser(adminAccount.value,'用户')
 	}
 	// 部门数据
 	const departmentData = ref([])

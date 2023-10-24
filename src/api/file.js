@@ -75,12 +75,13 @@ export const searchFlie = (file_name) => {
 }
 
 // 删除文件
-export const deleteFlie = (id) => {
+export const deleteFlie = (id,file_name) => {
 	return instance({
 		url: '/file/deleteFlie',
 		method: 'POST',
 		data: {
-			id
+			id,
+			file_name
 		}
 	})
 }

@@ -203,8 +203,6 @@
 			justify-content: space-around;
 			background: #fff;
 
-
-
 			// 公司公告
 			.company-notice {
 				@include table-class
