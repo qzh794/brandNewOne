@@ -1,4 +1,58 @@
-# 10-27修复 进度p115
+# 💎Vue-晏清-admin介绍
+
+Vue-晏清-admin是一个基于Vue3全家桶+Ts+Scss+MySQL+Express框架以及echarts、wangEditor等插件的全栈开发后台管理系统，适合有一定Vue基础或者是想入职但没有项目经验的同学学习。
+
+通过该视频的学习，可以了解中小企业是如何从0开发一个企业通用后台管理系统，对前后端数据的交互也会有一个更清晰的认识。
+
+
+
+有不少同学问为什么叫晏清？晏清是海晏河清的意思，寓意国泰民安，百姓安居乐业
+
+
+
+# 🔥作者介绍
+
+前端小王hs，广东兴宁人，CSDN前端领域90w访问+2w粉丝量博主、阿里云社区博客专家、清华大学出版社签约作家、全栈工程师、网络工程师
+
+
+
+# 🔥适宜人群
+
+✨想完整了解前后端数据交互的前端、后端、测试人员
+
+✨对企业如何从0到1搭建信息化系统的感兴趣的同学
+
+✨想独立完成一个完整前后端分离项目的同学
+
+✨想学习前端vue3+Ts技术栈的同学
+
+✨想学习后端Node.js和MySQL数据库的同学
+
+✨想学习如何设计一个具体功能的同学
+
+...
+
+
+
+# 🔥视频地址
+
+配套视频地址：https://www.bilibili.com/video/BV1Qu4y1W7rx/
+
+
+
+# 👑项目地址
+
+www.cxy001.com
+
+
+
+# ⚓接口地址
+
+待完善
+
+
+
+# 🛠10-27修复 进度p115
 
 ## 全局修复错误接口名称，后端同步修改
 
@@ -31,7 +85,7 @@
 
 // 系统除文件名涉及到Infor都改成了Info
 // userinfor.js
-// 函数名 getUserInfor 👉 getUserInfo
+// 函数名 getUserInfor 修改为 getUserInfo
 
 // 全局 product_inwarehouse_number 修改为 product_in_warehouse_number
 // 部分 delete 修改为 remove
