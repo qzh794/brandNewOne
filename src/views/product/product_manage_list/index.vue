@@ -25,17 +25,17 @@
 									<el-table-column prop="product_name" label="产品名称" width="160" />
 									<el-table-column prop="product_category" label="产品类别" width="100" />
 									<el-table-column prop="product_unit" label="单位" />
-									<el-table-column prop="product_inwarehouse_number" label="库存数量" width="100" />
+									<el-table-column prop="product_in_warehouse_number" label="库存数量" width="100" />
 									<el-table-column prop="product_single_price" label="产品单价" width="150" />
 									<el-table-column prop="product_all_price" label="库存总价" width="100" />
 									<el-table-column prop="product_status" label="库存状态" width="100">
 										<template #default="{row}">
 											<el-tag class="ml-2" type="success"
-												v-if="row.product_inwarehouse_number<100">库存较少</el-tag>
+												v-if="row.product_in_warehouse_number<100">库存较少</el-tag>
 											<el-tag class="ml-2" type="success"
-												v-else-if="row.product_inwarehouse_number>100&&row.product_inwarehouse_number<300">库存正常</el-tag>
+												v-else-if="row.product_in_warehouse_number>100&&row.product_in_warehouse_number<300">库存正常</el-tag>
 											<el-tag class="ml-2" type="success"
-												v-else-if="row.product_inwarehouse_number>300">库存过剩</el-tag>
+												v-else-if="row.product_in_warehouse_number>300">库存过剩</el-tag>
 										</template>
 									</el-table-column>
 									<el-table-column prop="product_create_person" label="入库负责人" width="100" />
@@ -54,7 +54,7 @@
 										<template #default="{row}">
 											<div>
 												<el-button type="primary" @click="applyOut(row)"
-													:disabled='row.product_out_status=="申请出库" || row.product_inwarehouse_number==0'>申请出库</el-button>
+													:disabled='row.product_out_status=="申请出库" || row.product_in_warehouse_number==0'>申请出库</el-button>
 												<el-button type="success" @click="editProduct(row)"
 													:disabled='row.product_out_status=="申请出库"'>修改</el-button>
 												<el-button type="danger" @click="deleteProduct(row.id)"
@@ -66,10 +66,10 @@
 							</div>
 						</div>
 						<div class="table-footer">
-							<el-pagination :page-size="1" :current-page="paginationData.prodcutCurrentPage"
-								:pager-count="7" :total="paginationData.productTotal"
-								:page-count="paginationData.prodcutpageCount" @current-change="ProductcurrentChange"
-								layout="prev, pager, next" />
+							<el-pagination :page-size="1" :current-page="paginationData.productCurrentPage"
+                             :pager-count="7" :total="paginationData.productTotal"
+                             :page-count="paginationData.productPageCount" @current-change="ProductCurrentChange"
+                             layout="prev, pager, next" />
 						</div>
 					</div>
 				</el-tab-pane>
@@ -87,7 +87,7 @@
 							</div>
 							<!-- 表格部分 -->
 							<div class="module-common-table">
-								<el-table :data="applytableData" border style="width: 100%">
+								<el-table :data="applyTableData" border style="width: 100%">
 									<el-table-column type="index" width="50"></el-table-column>
 									<el-table-column prop="product_out_id" label="申请出库编号" width="200" />
 									<el-table-column prop="product_name" label="产品名称" width="200" />
@@ -124,9 +124,9 @@
 						</div>
 						<div class="table-footer">
 							<el-pagination :page-size="1" :current-page="paginationData.applyProductCurrentPage"
-								:pager-count="7" :total="paginationData.applyProductTotal"
-								:page-count="paginationData.applyProductCount"
-								@current-change="applyProductcurrentChange" layout="prev, pager, next" />
+                             :pager-count="7" :total="paginationData.applyProductTotal"
+                             :page-count="paginationData.applyProductCount"
+                             @current-change="applyProductCurrentChange" layout="prev, pager, next" />
 						</div>
 					</div>
 				</el-tab-pane>
@@ -134,19 +134,19 @@
 		</div>
 	</div>
 	<!-- 入库操作影响产品列表 -->
-	<inwarehouse ref="inware" @success='getProductFirstPageList'></inwarehouse>
+	<warehousing  ref="in_warehouse" @success='getProductFirstPageList'></warehousing>
 	<!-- 申请操作影响审核列表 -->
-	<apply ref="applyp" @success='changeTwoPageList'></apply>
+	<apply ref="apply_product" @success='changeTwoPageList'></apply>
 	<!-- 编辑操作影响产品列表 -->
-	<edit ref="editp" @success='getProductFirstPageList'></edit>
+	<edit ref="edit_product" @success='getProductFirstPageList'></edit>
 	<!-- 删除操作影响产品列表 -->
-	<deleteP ref="deletep" @success='getProductFirstPageList'></deleteP>
+	<deleteP ref="delete_product" @success='getProductFirstPageList'></deleteP>
 	<!-- 审核操作影响产品列表、审核列表 -->
-	<audit ref="auditP" @success='changeTwoPageList'></audit>
+	<audit ref="audit_product" @success='changeTwoPageList'></audit>
 	<!-- 撤回操作影响产品列表、审核列表 -->
-	<withdraw ref="withdrawP" @success='changeTwoPageList'></withdraw>
+	<withdraw ref="withdraw_product" @success='changeTwoPageList'></withdraw>
 	<!-- 再次申请操作影响审核列表 -->
-	<again ref="againP" @success='getApplyProductFirstPageList'></again>
+	<again ref="again_product" @success='getApplyProductFirstPageList'></again>
 </template>
 
 <script lang='ts' setup>
@@ -155,7 +155,7 @@
 		reactive,
 	} from 'vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
-	import inwarehouse from '../components/product_in_warehouse.vue'
+	import warehousing  from '../components/product_in_warehouse.vue'
 	import apply from '../components/apply.vue'
 	import edit from '../components/edit_product.vue'
 	import deleteP from '../components/delete_product.vue'
@@ -204,16 +204,16 @@
 	// 产品表格
 	const tableData = ref([])
 	// 产品申请出库表格
-	const applytableData = ref([])
+	const applyTableData = ref([])
 
 	// 分页数据
 	const paginationData = reactive({
 		// 产品总数
 		productTotal: 0,
 		// 产品列表总页数
-		prodcutpageCount: 0,
+		productPageCount: 0,
 		// 产品列表当前所处页数
-		prodcutCurrentPage: 1,
+		productCurrentPage: 1,
 		// 申请的总数
 		applyProductTotal: 0,
 		// 申请列表总页数
@@ -224,19 +224,19 @@
 	
 	
 	// 获取产品列表的页数
-	const getProductListlength = async () => {
+	const getProductListLength = async () => {
 		const res = await getProductLength()
 		paginationData.productTotal = res.length
-		paginationData.prodcutpageCount = Math.ceil(res.length / 10)
+		paginationData.productPageCount = Math.ceil(res.length / 10)
 	}
-	getProductListlength()
+	getProductListLength()
 	// 获取审核列表的页数
-	const getApplyProductListlength = async () => {
+	const getApplyProductListLength = async () => {
 		const res = await getApplyProdcutLength()
 		paginationData.applyProductTotal = res.length
 		paginationData.applyProductCount = Math.ceil(res.length / 10)
 	}
-	getApplyProductListlength()
+	getApplyProductListLength()
 	// 默认获取产品列表第一页的数据
 	const getProductFirstPageList = async () => {
 		tableData.value = await returnProductListData(1)
@@ -244,7 +244,7 @@
 	getProductFirstPageList()
 	// 默认获取审核列表第一页的数据
 	const getApplyProductFirstPageList = async () => {
-		applytableData.value = await returnApplyProductListData(1)
+		applyTableData.value = await returnApplyProductListData(1)
 	}
 	getApplyProductFirstPageList()
 
@@ -255,13 +255,13 @@
 	}
 
 	// 产品列表监听换页
-	const ProductcurrentChange = async (value: number) => {
-		paginationData.prodcutCurrentPage = value
-		tableData.value = await returnProductListData(paginationData.prodcutCurrentPage)
+	const ProductCurrentChange = async (value: number) => {
+		paginationData.productCurrentPage = value
+		tableData.value = await returnProductListData(paginationData.productCurrentPage)
 	}
 
 	// 申请列表监听换页
-	const applyProductcurrentChange = async (value: number) => {
+	const applyProductCurrentChange = async (value: number) => {
 		paginationData.applyProductCurrentPage = value
 		tableData.value = await returnApplyProductListData(paginationData.applyProductCurrentPage)
 	}
@@ -276,51 +276,51 @@
 	}
 
 	// 打开产品入库
-	const inware = ref()
+	const in_warehouse  = ref()
 	const productInWarehouse = () => {
-		inware.value.open()
+    in_warehouse .value.open()
 	}
 
 	// 产品申请出库
-	const applyp = ref()
+	const apply_product  = ref()
 	const applyOut = (row: any) => {
 		bus.emit('applyId', row)
-		applyp.value.open()
+    apply_product .value.open()
 	}
 
 	// 编辑产品信息
-	const editp = ref()
+	const edit_product  = ref()
 	const editProduct = (row: any) => {
-		bus.emit('editProdcutId', row)
-		editp.value.open()
+		bus.emit('editProductId', row)
+    edit_product .value.open()
 	}
 
 	// 删除产品
-	const deletep = ref()
+	const delete_product  = ref()
 	const deleteProduct = (id: number) => {
-		bus.emit('deleteproductId', id)
-		deletep.value.open()
+		bus.emit('deleteProductId', id)
+    delete_product .value.open()
 	}
 
 	// 审核产品
-	const auditP = ref()
+	const audit_product  = ref()
 	const auditProduct = (row: any) => {
-		bus.emit('applyproductInfor', row)
-		auditP.value.open()
+		bus.emit('applyProductInfo', row)
+    audit_product .value.open()
 	}
 
 	// 撤回产品申请
-	const withdrawP = ref()
+	const withdraw_product = ref()
 	const withdrawProduct = (id: number) => {
 		bus.emit('withdrawId', id)
-		withdrawP.value.open()
+    withdraw_product.value.open()
 	}
 
 	// 再次申请产品出库
-	const againP = ref()
+	const again_product  = ref()
 	const againApply = (row: any) => {
 		bus.emit('againId', row)
-		againP.value.open()
+    again_product .value.open()
 	}
 </script>
 

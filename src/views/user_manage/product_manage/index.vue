@@ -46,8 +46,8 @@
 				layout="prev, pager, next" />
 		</div>
 	</div>
-	<create ref="Create"></create>
-	<edit ref='Edit'></edit>
+	<createA ref="Create"></createA>
+	<editA ref='Edit'></editA>
 	<deleteA ref="Delete"></deleteA>
 </template>
 
@@ -59,8 +59,8 @@
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
-	import create from '../components/create_admin.vue'
-	import edit from '../components/edit_admin.vue'
+	import createA from '../components/create_admin.vue'
+	import editA from '../components/edit_admin.vue'
 	import deleteA from '../components/delete_admin.vue'
 	import {
 		bus
@@ -95,12 +95,12 @@
 	})
 	const adminTotal = ref<number>(0)
 	// 获取管理员的数量
-	const getAdminListlength = async () => {
+	const returnAdminListLength = async () => {
 		const res = await getAdminListLength('产品管理员')
 		adminTotal.value = res.length
 		paginationData.pageCount = Math.ceil(res.length / 10)
 	}
-	getAdminListlength()
+	returnAdminListLength()
 	// 默认获取第一页的数据
 	const getFirstPageList = async () => {
 		tableData.value = await returnListData(1, '产品管理员')
@@ -133,15 +133,10 @@
 			tableData.value = await returnListData(paginationData.currentPage, '产品管理员')
 			if (tableData.value.length == 0) {
 				paginationData.currentPage = current - 1
-				getAdminListlength()
+				returnAdminListLength()
 			}
 		}
 	})
-
-	// const getAdminlist = () => {
-	// 	getAdminListlength()
-	// }
-	// getAdminlist()
 
 	// 创建管理员
 	const Create = ref()

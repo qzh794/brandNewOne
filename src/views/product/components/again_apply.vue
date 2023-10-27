@@ -3,7 +3,7 @@
 		<span >请确认，此操作将再次申请产品出库</span>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="applyproduct">
+				<el-button type="primary" @click="applyProduct">
 					确定
 				</el-button>
 			</span>
@@ -23,7 +23,7 @@
 
 	bus.on('againId', (row : any) => {
 		formData.id = row.id
-		formData.product_inwarehouse_number = row.product_inwarehouse_number
+		formData.product_in_warehouse_number = row.product_in_warehouse_number
 		formData.product_name = row.product_name
 		formData.product_single_price = row.product_single_price
 		formData.product_out_apply_person = row.product_out_apply_person
@@ -34,7 +34,7 @@
 		id : number,
 		product_name: string,
 		product_out_id : number,
-		product_inwarehouse_number : number,
+		product_in_warehouse_number : number,
 		product_single_price:number,
 		product_out_number : number,
 		product_out_apply_person : string,
@@ -45,7 +45,7 @@
 		id: null,
 		product_name:null,
 		product_out_id: null,
-		product_inwarehouse_number:null,
+    product_in_warehouse_number:null,
 		product_single_price:null,
 		product_out_number: null,
 		product_out_apply_person: '',
@@ -53,7 +53,7 @@
 	})
 	const emit = defineEmits(['success'])
 	
-	const applyproduct = async () => {
+	const applyProduct = async () => {
 			const res = await applyOutProduct(formData)
 			if (res.status == 0) {
 				ElMessage({

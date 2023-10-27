@@ -3,7 +3,7 @@
 	<!-- wrapper -->
 	<div class="module-common-wrapped">
 		<div class="module-common-content">
-			<el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+			<el-tabs v-model="activeName" class="demo-tabs">
 				<el-tab-pane label="公告管理" name="first">
 					<div class="pane-content">
 						<div class="pane-top">
@@ -13,7 +13,7 @@
 										<el-option v-for="item in departmentData" :key="item" :label="item"
 											:value="item" />
 									</el-select>
-									<el-radio-group v-model="radio2" class="ml-4" @change="getMessageListBylevel">
+									<el-radio-group v-model="radio2" class="ml-4" @change="getMessageListByLevel">
 										<el-radio label="一般">一般</el-radio>
 										<el-radio label="重要">重要</el-radio>
 										<el-radio label="必要">必要</el-radio>
@@ -59,7 +59,7 @@
 						<div class="table-footer">
 							<el-pagination :page-size="1" :current-page="paginationData.companyCurrentPage"
 								:pager-count="7" :total="paginationData.companyTotal"
-								:page-count="paginationData.companypageCount"
+								:page-count="paginationData.companyPageCount"
 								@current-change="companyCurrentChange" layout="prev, pager, next" />
 						</div>
 					</div>
@@ -146,16 +146,14 @@
 		first: '消息管理',
 		second: '消息列表'
 	})
-	const handleClick = (tab: TabsPaneContext) => {
 
-	}
 	const department = ref()
 	// 部门数据
 	const departmentData = ref([])
-	const getdepartment = async () => {
+	const returnDepartment = async () => {
 		departmentData.value = await getDepartment()
 	}
-	getdepartment()
+	returnDepartment()
 	
 	// 根据部门进行筛选
 	const getListByDepartment = async () =>{
@@ -164,7 +162,7 @@
 	// 根据消息等级进行筛选
 	const radio2 = ref()
 	
-	const getMessageListBylevel = async () =>{
+	const getMessageListByLevel = async () =>{
 		companyTableData.value = await searchMessageByLevel(radio2.value)
 	}
 
@@ -178,7 +176,7 @@
 		// 公司公告总数
 		companyTotal: 1,
 		// 公司公告列表总页数
-		companypageCount: 1,
+		companyPageCount: 1,
 		// 公司公告列表当前所处页数
 		companyCurrentPage: 1,
 		// 系统消息总数
@@ -189,19 +187,19 @@
 		systemCurrentPage: 1,
 	})
 	// 获取公司公告列表的页数
-	const getCompanytListlength = async () => {
+	const getCompanyListLength = async () => {
 		const res = await getCompanyMessageLength()
 		paginationData.companyTotal = res.length
-		paginationData.companypageCount = Math.ceil(res.length / 10)
+		paginationData.companyPageCount = Math.ceil(res.length / 10)
 	}
-	getCompanytListlength()
+	getCompanyListLength()
 	// 获取系统消息列表的页数
-	const getSystemListlength = async () => {
+	const getSystemListLength = async () => {
 		const res = await getSystemMessageLength()
 		paginationData.systemTotal = res.length
 		paginationData.systemCount = Math.ceil(res.length / 10)
 	}
-	getSystemListlength()
+	getSystemListLength()
 	// 默认获取公司公告列表第一页的数据
 	const getCompanyFirstPageList = async () => {
 		companyTableData.value = await returnCompanyListData(1)

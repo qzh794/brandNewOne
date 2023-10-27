@@ -3,7 +3,7 @@
 		<span >请慎重操作，删除后将失去此产品的记录</span>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="deleteproduct">
+				<el-button type="primary" @click="productDelete">
 					确定
 				</el-button>
 			</span>
@@ -21,15 +21,15 @@
 	} from '@/api/product.js'
 	import { ElMessage } from 'element-plus'
 
-	const productid = ref()
+	const productId = ref()
 
-	bus.on('deleteproductId', (id : number) => {
-		productid.value = id
+	bus.on('deleteProductId', (id : number) => {
+		productId.value = id
 	})
 	const emit = defineEmits(['success'])
 	
-	const deleteproduct = async () => {
-			const res = await deleteProduct(productid.value)
+	const productDelete = async () => {
+			const res = await deleteProduct(productId.value)
 			if (res.status == 0) {
 				ElMessage({
 					message: '删除产品成功',

@@ -63,10 +63,10 @@ export const returnFilesListData = (pager) => {
 }
 
 
-// searchFlie
-export const searchFlie = (file_name) => {
+// searchFile
+export const searchFile = (file_name) => {
 	return instance({
-		url: '/file/searchFlie',
+		url: '/file/searchFile',
 		method: 'POST',
 		data: {
 			file_name
@@ -75,9 +75,9 @@ export const searchFlie = (file_name) => {
 }
 
 // 删除文件
-export const deleteFlie = (id,file_name) => {
+export const deleteFile = (id,file_name) => {
 	return instance({
-		url: '/file/deleteFlie',
+		url: '/file/deleteFile',
 		method: 'POST',
 		data: {
 			id,

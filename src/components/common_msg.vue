@@ -56,7 +56,7 @@
 		message.message_publish_time = row.message_publish_time
 	})
 
-	interface message {
+	interface Message {
 		message_title: string;
 		message_content: string;
 		message_publish_department: string;
@@ -66,7 +66,7 @@
 		message_publish_time: string;
 	}
 
-	const message: message = reactive({
+	const message: Message = reactive({
 		message_title: '',
 		message_content: '',
 		message_publish_department: '',

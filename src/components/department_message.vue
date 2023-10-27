@@ -5,7 +5,7 @@
 				<div class="message-list-wrapped">
 					<div class="list-table-content">
 						<el-table :data="msgStore.msg_list.length >0 ? msgStore.msg_list : tableData"
-							style="width: 100%;" highlight-current-row @row-click="getdetail">
+							style="width: 100%;" highlight-current-row @row-click="getDetail">
 							<el-table-column type="index" width="50" />
 							<el-table-column width="5">
 								<template #default='{ row}'>
@@ -39,9 +39,9 @@
 				</div>
 			</el-aside>
 			<el-main>
-				<div class="detail-wrapped" v-if="messageInfor.message_title!==''">
-					<div>{{messageInfor.message_title}}</div>
-					<div v-html="messageInfor.message_content"></div>
+				<div class="detail-wrapped" v-if="messageInfo.message_title!==''">
+					<div>{{ messageInfo.message_title }}</div>
+					<div v-html="messageInfo.message_content"></div>
 				</div>
 				<div class="detail-wrapped" v-else>
 					请点击列表中的消息进行查看
@@ -69,12 +69,12 @@
 	const msgStore = useMsg()
 	const tableData = ref([])
 
-	const messageInfor = reactive({
+	const messageInfo = reactive({
 		message_title: '',
 		message_content: ''
 	})
 	// 当前未读消息
-	const readlist = ref([])
+	const readList = ref([])
 
 	const getUserDepartmentMessage = async () => {
 		const id = localStorage.getItem('id')
@@ -86,25 +86,25 @@
 				const {
 					read_list
 				} = await getDepartmentMsg(id, department)
-				readlist.value = read_list
+				readList.value = read_list
 			} else {
-				readlist.value = JSON.parse(res[0].read_list)
+				readList.value = JSON.parse(res[0].read_list)
 			}
 		}
 	}
 	getUserDepartmentMessage()
 
 
-	const getdetail = async (row : any) => {
+	const getDetail = async (row : any) => {
 		await updateClick(row.message_click_number, row.id)
 		await clickDelete(row.id, localStorage.getItem('id'))
-		messageInfor.message_title = row.message_title
-		messageInfor.message_content = row.message_content
+		messageInfo.message_title = row.message_title
+		messageInfo.message_content = row.message_content
 		getUserDepartmentMessage()
 	}
 
 	const idInList = (id : number) => {
-		if (readlist.value.indexOf(id) !== -1) {
+		if (readList.value.indexOf(id) !== -1) {
 			return 0
 		} else {
 			return 1

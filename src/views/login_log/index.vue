@@ -29,7 +29,7 @@
 		</div>
 		<div class="table-footer">
 			<el-pagination :page-size="1" :current-page="paginationData.loginCurrentPage" :pager-count="7"
-				:total="paginationData.loginTotal" :page-count="paginationData.loginpageCount"
+				:total="paginationData.loginTotal" :page-count="paginationData.loginPageCount"
 				@current-change="loginCurrentChange" layout="prev, pager, next" />
 		</div>
 	</div>
@@ -67,17 +67,17 @@
 		// 登录次数总数
 		loginTotal: 1,
 		// 登录次数列表总页数
-		loginpageCount: 1,
+		loginPageCount: 1,
 		// 登录次数列表当前所处页数
 		loginCurrentPage: 1,
 	})
 	// 获取登录次数列表的页数
-	const getLogintListlength = async () => {
+	const getLoginListLength = async () => {
 		const res = await loginLogListLength()
 		paginationData.loginTotal = res.length
-		paginationData.loginpageCount = Math.ceil(res.length / 10)
+		paginationData.loginPageCount = Math.ceil(res.length / 10)
 	}
-	getLogintListlength()
+	getLoginListLength()
 	// 默认获取登录次数列表第一页的数据
 	const getLoginFirstPageList = async () => {
 		tableData.value = await returnLoginListData(1)

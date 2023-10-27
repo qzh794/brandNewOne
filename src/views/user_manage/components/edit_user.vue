@@ -26,7 +26,7 @@
 		</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="editadmin">
+				<el-button type="primary" @click="editUser">
 					确定
 				</el-button>
 			</span>
@@ -56,10 +56,10 @@
 
 	// 部门数据
 	const departmentData = ref([])
-	const getdepartment = async () => {
+	const returnDepartment = async () => {
 		departmentData.value = await getDepartment()
 	}
-	getdepartment()
+	returnDepartment()
 
 	interface formData {
 		id ?: number,
@@ -95,7 +95,7 @@
 		],
 	})
 	// 编辑用户信息
-	const editadmin = async () => {
+	const editUser = async () => {
 		const res = await editAdmin(formData)
 		if (res.status == 0) {
 			ElMessage({

@@ -1,7 +1,7 @@
 import instance from '@/http/index.js'
 
 // 获取用户信息
-export const getUserInfor = id => {
+export const getUserInfo = id => {
 	return instance({
 		url: '/user/getUserInfo',
 		method: 'POST',

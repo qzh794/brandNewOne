@@ -59,9 +59,9 @@ const routes = [{
 				component: () => import('@/views/product/product_manage_list/index.vue')
 			},
 			{
-				name: 'out_prodcut_manage_list',
-				path: '/out_prodcut_manage_list',
-				component: () => import('@/views/product/out_prodcut_manage_list/index.vue')
+				name: 'out_product_manage_list',
+				path: '/out_product_manage_list',
+				component: () => import('@/views/product/out_product_manage_list/index.vue')
 			},
 			{
 				name: 'message_list',

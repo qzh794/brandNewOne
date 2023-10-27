@@ -47,11 +47,11 @@
 		</div>
 		<div class="table-footer">
 			<el-pagination :page-size="1" :current-page="paginationData.fileCurrentPage" :pager-count="7"
-				:total="paginationData.fileTotal" :page-count="paginationData.filepageCount"
+				:total="paginationData.fileTotal" :page-count="paginationData.filePageCount"
 				@current-change="fileCurrentChange" layout="prev, pager, next" />
 		</div>
 	</div>
-	<tips ref="tip" @success='getfileFirstPageList'></tips>
+	<tips ref="tip" @success='getFileFirstPageList'></tips>
 </template>
 
 <script lang='ts' setup>
@@ -102,7 +102,7 @@
 				message: '上传文件成功',
 				type: 'success',
 			})
-			getfileFirstPageList()
+			getFileFirstPageList()
 		} else {
 			ElMessage.error('上传文件失败，请检查网络问题！')
 		}
@@ -115,22 +115,22 @@
 		// 文件总数
 		fileTotal: 1,
 		// 文件列表总页数
-		filepageCount: 1,
+		filePageCount: 1,
 		// 文件列表当前所处页数
 		fileCurrentPage: 1,
 	})
 	// 获取文件列表的页数
-	const getfiletListlength = async () => {
+	const getFileListLength = async () => {
 		const res = await fileListLength()
 		paginationData.fileTotal = res.length
-		paginationData.filepageCount = Math.ceil(res.length / 10)
+		paginationData.filePageCount = Math.ceil(res.length / 10)
 	}
-	getfiletListlength()
+	getFileListLength()
 	// 默认获取文件列表第一页的数据
-	const getfileFirstPageList = async () => {
+	const getFileFirstPageList = async () => {
 		tableData.value = await returnFilesListData(1)
 	}
-	getfileFirstPageList()
+	getFileFirstPageList()
 
 
 	// 文件列表监听换页

@@ -88,9 +88,9 @@ export const returnLoginListData = (pager) => {
 	})
 }
 
-export const returnOpeartionListData = (pager) => {
+export const returnOperationListData = (pager) => {
 	return instance({
-		url: '/olog/returnOpeartionListData',
+		url: '/olog/returnOperationListData',
 		method: 'POST',
 		data: {
 			pager
@@ -99,9 +99,9 @@ export const returnOpeartionListData = (pager) => {
 }
 
 // 清空登录日志
-export const clearloginLogList = () => {
+export const clearLoginLogList = () => {
 	return instance({
-		url: '/llog/clearloginLogList',
+		url: '/llog/clearLoginLogList',
 		method: 'POST',
 	})
 }

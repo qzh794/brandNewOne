@@ -23,8 +23,8 @@
 		</el-footer>
 	</el-dialog>
 	<promote ref="pro"></promote>
-	<edit ref="editu"></edit>
-	<deleteu ref="deleteU"></deleteu>
+	<edit ref="edit_user"></edit>
+	<remove  ref="delete_user"></remove >
 </template>
 
 <script lang="ts" setup>
@@ -34,7 +34,7 @@
 	} from "@/utils/mitt.js"
 	import promote from '../components/promote.vue'
 	import edit from '../components/edit_user.vue'
-	import deleteu from '../components/delete_admin.vue'
+	import remove  from '../components/delete_admin.vue'
 	bus.on('userId', (row : any) => {
 		userData.id = row.id
 		userData.imageUrl = row.imageUrl
@@ -68,21 +68,21 @@
 		pro.value.open()
 	}
 	// 对用户进行编辑
-	const editu = ref()
+	const edit_user = ref()
 	const openEdit = (id : number) => {
 		bus.emit('editId', id)
-		editu.value.open()
+    edit_user.value.open()
 	}
 	// 删除用户
-	const deleteU = ref()
+	const delete_user = ref()
 	const openDelete = (id : number) => {
-		let userInfor = {
+		let userInfo = {
 			id:id,
 			account:userData.account,
 			name:userData.name
 		}
-		bus.emit('deleteUserId', userInfor)
-		deleteU.value.open()
+		bus.emit('deleteUserId', userInfo)
+    delete_user.value.open()
 	}
 	
 	// 弹窗开关

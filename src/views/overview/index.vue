@@ -5,7 +5,7 @@
 		<!-- 顶部内容外壳 -->
 		<div class="top-content-wrapped">
 			<!-- 个人信息 -->
-			<div class="person-infor">
+			<div class="person-info">
 				<!-- 用户头像外壳 -->
 				<div class="person-avatar-wrapped">
 					<el-avatar :size="100" :src="userStore.imageUrl" />
@@ -17,7 +17,7 @@
 					<div class="line"></div>
 				</div>
 				<!-- 详细信息外壳 -->
-				<div class="detail-infor-wrapped">
+				<div class="detail-info-wrapped">
 					<p>姓名：{{userData.name}}</p>
 					<p>性别：{{userData.sex}}</p>
 					<p>身份：{{userData.identity}}</p>
@@ -75,7 +75,7 @@
 		<!-- 底部内容外壳 -->
 		<div class="footer-content-wrapped">
 			<div class="massage-level footer-content-left"></div>
-			<div class="userlogin-week footer-content-right"></div>
+			<div class="login-week footer-content-right"></div>
 		</div>
 	</div>
 </template>
@@ -93,7 +93,7 @@
 		useRouter
 	} from 'vue-router'
 	import {
-		useUserInfor
+		useUserInfo
 	} from '@/store/userinfor.js'
 	import {
 		getCategoryAndNumber,
@@ -102,7 +102,7 @@
 		getDayAndNumber
 	} from '@/api/overview.js'
 	import {
-		getUserInfor
+		getUserInfo
 	} from '@/api/userinfor.js'
 	onMounted(() => {
 		manageUser()
@@ -110,7 +110,7 @@
 		massageLevel()
 		massageAllDay()
 	})
-	const userStore = useUserInfor()
+	const userStore = useUserInfo()
 	// 面包屑
 	const breadcrumb = ref()
 	// 面包屑参数
@@ -123,14 +123,14 @@
 		router.push(`\/${x}`)
 	}
 	// // 获取用户信息
-	const getUserinfor = async () => {
-		const res = await getUserInfor(localStorage.getItem('id'))
+	const getUserinfo = async () => {
+		const res = await getUserInfo(localStorage.getItem('id'))
 		userData.name = res.name
 		userData.sex = res.sex
 		userData.identity = res.identity
 		userData.department = res.department
 	}
-	getUserinfor()
+	getUserinfo()
 
 	interface userData {
 		name: string,
@@ -284,11 +284,11 @@
 	// 消息每日总量图
 	const massageAllDay = async () => {
 
-		const mad = echarts.init(document.querySelector('.userlogin-week'))
+		const mad = echarts.init(document.querySelector('.login-week'))
 		mad.showLoading()
 		let data = await getDayAndNumber()
 		mad.hideLoading()
-		document.querySelector('.userlogin-week').setAttribute('_echarts_instance_', '')
+		document.querySelector('.login-week').setAttribute('_echarts_instance_', '')
 		mad.setOption({
 			title: {
 				text: "每日登录人数图",
@@ -331,7 +331,7 @@
 			display: flex;
 
 			// 个人信息
-			.person-infor {
+			.person-info {
 				height: 100%;
 				margin-right: 8px;
 				width: calc(50% - 8px);
@@ -349,7 +349,7 @@
 
 					// 公司
 					.company {
-						margin: 10px 0px;
+						margin: 10px 0;
 						font-size: 12px;
 					}
 
@@ -374,7 +374,7 @@
 				}
 
 				// 详细信息区域
-				.detail-infor-wrapped {
+				.detail-info-wrapped {
 					height: 100%;
 					width: calc(50% - 1px);
 					margin-left: 50px;

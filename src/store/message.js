@@ -22,11 +22,5 @@ export const useMsg = defineStore('messageinfor', {
 		}
 	},
 }, {
-	persist: {
-		// 存储全部数据
-		enabled: true,
-		// 关键字
-		key: 'messageinfor',
-		storage: localStorage,
-	}
+	persist:true
 })

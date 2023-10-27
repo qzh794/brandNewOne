@@ -37,7 +37,7 @@
 		</div>
 		<div class="table-footer">
 			<el-pagination :page-size="1" :current-page="paginationData.operationCurrentPage" :pager-count="7"
-				:total="paginationData.operationTotal" :page-count="paginationData.operationpageCount"
+				:total="paginationData.operationTotal" :page-count="paginationData.operationPageCount"
 				@current-change="operationCurrentChange" layout="prev, pager, next" />
 		</div>
 	</div>
@@ -75,17 +75,17 @@
 		// 操作次数总数
 		operationTotal: 1,
 		// 操作次数列表总页数
-		operationpageCount: 1,
+		operationPageCount: 1,
 		// 操作次数列表当前所处页数
 		operationCurrentPage: 1,
 	})
 	// 获取操作次数列表的页数
-	const getOperationtListlength = async () => {
+	const getOperationListLength = async () => {
 		const res = await operationLogListLength()
 		paginationData.operationTotal = res.length
-		paginationData.operationpageCount = Math.ceil(res.length / 10)
+		paginationData.operationPageCount = Math.ceil(res.length / 10)
 	}
-	getOperationtListlength()
+	getOperationListLength()
 	// 默认获取操作次数列表第一页的数据
 	const getOperationFirstPageList = async () => {
 		tableData.value = await returnOpeartionListData(1)
@@ -140,6 +140,6 @@
 	}
 	
 	.normal{
-		border-left: 0px;
+		border-left: 0;
 	}
 </style>

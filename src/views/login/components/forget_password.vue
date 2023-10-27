@@ -25,8 +25,8 @@
 			<el-form-item label="输入您的新密码" prop="password">
 				<el-input v-model="forgetData.password" placeholder="输入您的新密码" show-password/>
 			</el-form-item>
-			<el-form-item label="再次确认您的新密码" prop="repassword">
-				<el-input v-model="forgetData.repassword" placeholder="再次确认您的新密码" show-password/>
+			<el-form-item label="再次确认您的新密码" prop="nextPassword">
+				<el-input v-model="forgetData.nextPassword" placeholder="再次确认您的新密码" show-password/>
 			</el-form-item>
 		</el-form>
 		<!-- 底部内容 -->
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-	import { reactive, ref,onBeforeUnmount } from 'vue'
+	import { reactive, ref } from 'vue'
 	import { verify, reset } from '@/api/login.js'
 	import { ElMessage } from 'element-plus'
 	// 表单对齐方式
@@ -52,14 +52,14 @@
 		account : number;
 		email : string;
 		password : string;
-		repassword : string;
+		nextPassword : string;
 	}
 	// 表单对象
 	const forgetData : forgetData = reactive({
 		account: null,
 		email: '',
 		password: '',
-		repassword: '',
+		nextPassword: '',
 	})
 	// 表单规则
 	const rules = reactive({
@@ -72,7 +72,7 @@
 		password: [
 			{ required: true, message: '请输入您想修改的密码', trigger: 'blur' },
 		],
-		repassword: [
+    nextPassword: [
 			{ required: true, message: '请再次确认您的新密码', trigger: 'blur' },
 		],
 	})
@@ -102,8 +102,8 @@
 	}
 	// 重置密码
 	const resetPassword = async() =>{
-		if(forgetData.password==forgetData.repassword){
-			const newPassword = forgetData.repassword
+		if(forgetData.password==forgetData.nextPassword){
+			const newPassword = forgetData.nextPassword
 			// localStorage/sessionStorage.getItem获取我们存储在浏览器的数据
 			// 调用接口
 			await reset(localStorage.getItem('id'),newPassword)

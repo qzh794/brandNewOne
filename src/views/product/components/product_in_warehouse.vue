@@ -20,8 +20,8 @@
 						<el-option label="件" value="件" />
 					</el-select>
 				</el-form-item>
-				<el-form-item label="产品入库数量" prop="product_inwarehouse_number">
-					<el-input v-model="formData.product_inwarehouse_number" />
+				<el-form-item label="产品入库数量" prop="product_in_warehouse_number">
+					<el-input v-model="formData.product_in_warehouse_number" />
 				</el-form-item>
 				<el-form-item label="产品入库单价" prop="product_single_price">
 					<el-input v-model="formData.product_single_price" />
@@ -36,7 +36,7 @@
 		</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="addprodcut">
+				<el-button type="primary" @click="add">
 					确定
 				</el-button>
 			</span>
@@ -56,27 +56,27 @@
 
 	// 产品类别数据
 	const categoryData = ref([])
-	const getproduct = async() => {
+	const returnProduct = async() => {
 		categoryData.value = await getProduct()
 	}
-	getproduct()
-	interface formData {
+	returnProduct()
+	interface FormData {
 		product_id : number,
 		product_name : string,
 		product_category : string,
 		product_unit : string,
-		product_inwarehouse_number : number,
+    product_in_warehouse_number : number,
 		product_single_price : number,
 		product_create_person : string,
 		in_memo : string
 	}
 
-	const formData : formData = reactive({
+	const formData : FormData = reactive({
 		product_id: null,
 		product_name: '',
 		product_category: '',
 		product_unit: '',
-		product_inwarehouse_number: null,
+    product_in_warehouse_number: null,
 		product_single_price: null,
 		product_create_person: '',
 		in_memo: ''
@@ -95,7 +95,7 @@
 		product_unit: [
 			{ required: true, message: '请选择产品单位', trigger: 'blur' },
 		],
-		product_inwarehouse_number: [
+    product_in_warehouse_number: [
 			{ required: true, message: '请输入产品入库数量', trigger: 'blur' },
 		],
 		product_single_price: [
@@ -107,7 +107,7 @@
 	})
 	const emit = defineEmits(['success'])
 	// 产品出库
-	const addprodcut = () => {
+	const add = () => {
 		const res = createProduct(formData)
 		if (res.status == 0) {
 			ElMessage({

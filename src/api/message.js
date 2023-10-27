@@ -69,7 +69,7 @@ export const editMessage = data => {
 // 根据发布部门进行获取消息
 export const searchMessageBydepartment = message_publish_department => {
 	return instance({
-		url: '/msg/searchMessageBydepartment',
+		url: '/msg/searchMessageByDepartment',
 		method: 'POST',
 		data: {
 			message_publish_department
@@ -112,9 +112,9 @@ export const updateClick = (message_click_number, id) => {
 }
 
 // 初次删除
-export const fisrtDelete = (id) => {
+export const firstDelete = (id) => {
 	return instance({
-		url: '/msg/fisrtDelete',
+		url: '/msg/firstDelete',
 		method: 'POST',
 		data: {
 			id

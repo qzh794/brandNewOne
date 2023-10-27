@@ -59,10 +59,10 @@
 	})
 	// 部门数据
 	const departmentData = ref([])
-	const getdepartment = async() => {
+	const returnDepartment = async() => {
 		departmentData.value = await getDepartment()
 	}
-	getdepartment()
+	returnDepartment()
 	interface formData {
 		account : number,
 		password : string,

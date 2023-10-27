@@ -3,7 +3,7 @@
 		<span >确定取消此产品的出库申请吗？</span>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="deleteproduct">
+				<el-button type="primary" @click="removeProduct">
 					确定
 				</el-button>
 			</span>
@@ -28,7 +28,7 @@
 	})
 	const emit = defineEmits(['success'])
 	
-	const deleteproduct = async () => {
+	const removeProduct = async () => {
 			const res = await withdrawApplyProduct(withdrawId.value)
 			if (res.status == 0) {
 				ElMessage({

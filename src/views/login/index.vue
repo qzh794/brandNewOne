@@ -42,7 +42,7 @@
 										<el-input v-model="registerData.password" placeholder="密码需长度6-12位含字母数字" />
 									</el-form-item>
 									<el-form-item label="确认密码">
-										<el-input v-model="registerData.repassword" placeholder="请再次输入密码" />
+										<el-input v-model="registerData.nextPassword" placeholder="请再次输入密码" />
 									</el-form-item>
 									<div class="footer-button">
 										<el-button type="primary" @click="Register">注册</el-button>
@@ -77,26 +77,26 @@
 		login, register
 	} from '@/api/login'
 	import { loginLog } from '@/api/log'
-	import { useUserInfor } from '@/store/userinfor'
+	import { useUserInfo } from '@/store/userinfor'
 	const activeName = ref('first')
 	const router = useRouter()
-	const store = useUserInfor()
+	const store = useUserInfo()
 	// 表单接口
-	interface formData {
-		account : number;
+	interface FormData {
+		account : number|null;
 		password : string;
-		repassword ?: string;
+		nextPassword ?: string;
 	}
 	// 登录表单数据
-	const loginData : formData = reactive({
+	const loginData : FormData = reactive({
 		account: null,
 		password: '',
 	})
 	// 注册表单数据
-	const registerData : formData = reactive({
+	const registerData : FormData = reactive({
 		account: null,
 		password: '',
-		repassword: '',
+		nextPassword: '',
 	})
 	// 登录
 	const Login = async () => {
@@ -114,7 +114,7 @@
 			localStorage.setItem('name', name)
 			localStorage.setItem('department', department)
 			await loginLog(account,name,email)
-			store.userInfor(id)
+			store.userInfo(id)
 			// 跳转
 			router.push('/home')
 		} else {
@@ -125,7 +125,7 @@
 
 	// 注册
 	const Register = async () => {
-		if (registerData.password == registerData.repassword) {
+		if (registerData.password == registerData.nextPassword) {
 			const res = await register(registerData)
 			if (res.message == "注册账号成功") {
 				ElMessage({

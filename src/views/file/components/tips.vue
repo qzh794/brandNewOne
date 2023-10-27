@@ -17,20 +17,20 @@
 		bus
 	} from "@/utils/mitt.js"
 	import {
-		deleteFlie
+    deleteFile
 	} from '@/api/file.js'
 	import { ElMessage } from 'element-plus'
 	// 消息ID
-	const fileid = ref()
+	const fileId = ref()
 	const filename = ref()
 	bus.on('deleteFile', (row : any) => {
-		fileid.value = row.id
+		fileId.value = row.id
 		filename.value = row.file_name
 	})
 	const emit = defineEmits(['success'])
 
 	const operationFiles = async () => {
-		const res = await deleteFlie(fileid.value,filename.value)
+		const res = await deleteFile(fileId.value,filename.value)
 		if (res.status == 0) {
 			ElMessage({
 				message: '删除文件成功',

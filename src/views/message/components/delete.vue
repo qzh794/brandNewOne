@@ -2,7 +2,7 @@
 	<el-dialog v-model="dialogFormVisible" :title='title' width="30%" center>
 		<span v-if="title.value=='删除信息'" v-html="tips"></span>
 		<span v-else-if="title.value=='恢复消息'" v-html="tips"></span>
-		<span v-else="title.value=='真正删除信息'" v-html="tips"></span>
+		<span v-else v-html="tips"></span>
 		<template #footer>
 			<span class="dialog-footer">
 				<el-button type="primary" @click="operationMessage">
@@ -30,32 +30,32 @@
 	const title = ref()
 	const tips = ref()
 	// 消息ID
-	const messageid = ref()
+	const messageId = ref()
 	const department = ref()
 	bus.on('deleteMessageId', (row : any) => {
 		title.value = '删除信息'
 		tips.value = '您确定要删除这个公告吗？'
-		messageid.value = row.id
+		messageId.value = row.id
 		department.value = row.message_receipt_object
 	})
 	bus.on('renewID', (row : any) => {
 		title.value = '恢复消息'
 		tips.value = '您确定要恢复这个公告吗？'
-		messageid.value =row.id
+		messageId.value =row.id
 		department.value = row.message_receipt_object
 	})
 	bus.on('realDelete', (id : number) => {
 		title.value = '真正删除信息'
 		tips.value = '请慎重操作！您确定要真正删除这个公告吗？'
-		messageid.value = id
+		messageId.value = id
 	})
 	const emit = defineEmits(['success'])
 
 	const operationMessage = async () => {
 		if (title.value == '删除信息') {
-			const res = await fisrtDelete(messageid.value)
+			const res = await fisrtDelete(messageId.value)
 			if (res.status == 0) {
-				await changeUserReadListButDelete(messageid.value,department.value)
+				await changeUserReadListButDelete(messageId.value,department.value)
 				msgStore.returnReadList(localStorage.getItem('id'))
 				ElMessage({
 					message: '删除公告成功',
@@ -69,9 +69,9 @@
 			}
 		}
 		if (title.value == '恢复消息') {
-			const res = await recover(messageid.value)
+			const res = await recover(messageId.value)
 			if (res.status == 0) {
-				await changeUserReadList(messageid.value,department.value)
+				await changeUserReadList(messageId.value,department.value)
 				msgStore.returnReadList(localStorage.getItem('id'))
 				ElMessage({
 					message: '恢复公告成功',
@@ -85,7 +85,7 @@
 			}
 		}
 		if (title.value == '真正删除信息') {
-			const res = await deleteMessage(messageid.value)
+			const res = await deleteMessage(messageId.value)
 			if (res.status == 0) {
 				ElMessage({
 					message: '删除公告成功',

@@ -17,8 +17,8 @@
 				</el-form-item>
 				<el-form-item label="接收部门" prop='message_receipt_object' v-if="title=='发布公告'||title=='编辑公告'">
 					<el-select v-model="formData.message_receipt_object" placeholder="请选择接收部门">
-						<el-option v-for="item in alloptions" :key="item.value" :label="item.value"
-							:value="item.value" />
+						<el-option v-for="item in allOptions" :key="item.value" :label="item.value"
+                       :value="item.value" />
 					</el-select>
 				</el-form-item>
 				<el-form-item label="公告等级" prop='message_level' v-if="title=='发布公告'||title=='编辑公告'">
@@ -84,25 +84,25 @@
 	// 不包括全体成员
 	const options = ref([])
 	// 包括全体成员
-	const alloptions = ref([])
+	const allOptions = ref([])
 	// 部门数据
 	// const departmentData = ref([])
-	const getdepartment = async () => {
+	const returnDepartment = async () => {
 		const res = await getDepartment()
 		const data = []
-		const datas = []
+		const dataPro = []
 		for (let i = 0; i < res.length; i++) {
 			let obj = {
 				value: res[i]
 			}
 			data.push(obj)
-			datas.push(obj)
+			dataPro.push(obj)
 		}
 		options.value = data
-		datas.push({ value: "全体成员" })
-		alloptions.value = datas
+		dataPro.push({ value: "全体成员" })
+		allOptions.value = dataPro
 	}
-	getdepartment()
+	returnDepartment()
 
 	bus.on('editMessage', (row : any) => {
 		title.value = "编辑公告"
@@ -122,7 +122,7 @@
 		formData.message_content = row.message_content
 	})
 
-	interface formData {
+	interface FormData {
 		id : number;
 		message_title : string;
 		message_publish_department : string;

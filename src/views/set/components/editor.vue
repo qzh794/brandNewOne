@@ -28,7 +28,6 @@
 	import {
 		ElMessage
 	} from "element-plus"
-	// changecompanyintro
 	import { changeCompanyIntroduce, getCompanyIntroduce } from '@/api/setting'
 	const title = ref()
 	bus.on("editorTitle", async (id : number) => {

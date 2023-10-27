@@ -2,9 +2,9 @@ import {
 	defineStore
 } from 'pinia'
 import {
-	getUserInfor
+	getUserInfo
 } from '@/api/userinfor.js'
-export const useUserInfor = defineStore('userinfor', {
+export const useUserInfo = defineStore('userinfor', {
 	state: () => {
 		return {
 			imageUrl: '',
@@ -17,8 +17,8 @@ export const useUserInfor = defineStore('userinfor', {
 		}
 	},
 	actions: {
-		async userInfor(id) {
-			const res = await getUserInfor(id)
+		async userInfo(id) {
+			const res = await getUserInfo(id)
 			this.imageUrl = res.image_url
 			this.name = res.name
 			this.sex = res.sex
@@ -29,11 +29,5 @@ export const useUserInfor = defineStore('userinfor', {
 		}
 	},
 }, {
-	persist: {
-		// 存储全部数据
-		enabled: true,
-		// 关键字
-		key: 'userinfor',
-		storage: localStorage,
-	}
+	persist: true
 })

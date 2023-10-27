@@ -28,7 +28,7 @@
 		<div class="table-footer">
 			<el-pagination :page-size="1" :current-page="paginationData.recycleCurrentPage"
 				:pager-count="7" :total="paginationData.recycleTotal"
-				:page-count="paginationData.recyclepageCount"
+				:page-count="paginationData.recyclePageCount"
 				@current-change="recycleCurrentChange" layout="prev, pager, next" />
 		</div>
 	</div>
@@ -60,17 +60,17 @@
 		// 回收站总数
 		recycleTotal: 1,
 		// 回收站列表总页数
-		recyclepageCount: 1,
+		recyclePageCount: 1,
 		// 回收站列表当前所处页数
 		recycleCurrentPage: 1,
 	})
 	// 获取回收站列表的页数
-	const getRecycletListlength = async () => {
+	const getRecycleListLength = async () => {
 		const res = await getRecycleMessageLength()
 		paginationData.recycleTotal = res.length
-		paginationData.recyclepageCount = Math.ceil(res.length / 10)
+		paginationData.recyclePageCount = Math.ceil(res.length / 10)
 	}
-	getRecycletListlength()
+	getRecycleListLength()
 	// 默认获取回收站列表第一页的数据
 	const getRecycleFirstPageList = async () => {
 		tableData.value = await returnRecycleListData(1)

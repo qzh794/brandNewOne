@@ -36,36 +36,36 @@ export const getReadListAndStatus = (id) => {
 }
 
 // 用户点击消息后,对read_list内的数据进行删减
-export const clickDelete = (readid, id) => {
+export const clickDelete = (readId, id) => {
 	return instance({
 		url: '/dm/clickDelete',
 		method: 'POST',
 		data: {
-			readid,
+			readId,
 			id
 		}
 	})
 }
 
 // 把新发布文章的id插入到当前所属部门的用户的read_list中
-export const changeUserReadList = (newid, department) => {
+export const changeUserReadList = (newId, department) => {
 	return instance({
 		url: '/dm/changeUserReadList',
 		method: 'POST',
 		data: {
-			newid,
+			newId,
 			department
 		}
 	})
 }
 
 // 把删除的文章的id从当前所属部门的用户的read_list中删除
-export const changeUserReadListButDelete = (deleteid, department) => {
+export const changeUserReadListButDelete = (deleteId, department) => {
 	return instance({
 		url: '/dm/changeUserReadListButDelete',
 		method: 'POST',
 		data: {
-			deleteid,
+			deleteId,
 			department
 		}
 	})

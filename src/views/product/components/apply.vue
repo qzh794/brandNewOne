@@ -1,7 +1,7 @@
 <template>
 	<el-dialog v-model="dialogFormVisible" title='申请出库' width="600px" align-center draggable>
 			<div class="product-name">您申请出库的产品是:&nbsp;&nbsp;{{formData.product_name}}</div>
-			<div class="product-name">该产品的库存还有:&nbsp;&nbsp;{{formData.product_inwarehouse_number}}</div>
+			<div class="product-name">该产品的库存还有:&nbsp;&nbsp;{{formData.product_in_warehouse_number}}</div>
 			<div class="dialog-content">
 				<el-form ref="ruleFormRef" :model="formData" :label-position="labelPosition" :rules="rules"
 					label-width="120px">
@@ -24,7 +24,7 @@
 			</div>
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="addprodcut" :disabled='formData.product_inwarehouse_number<formData.product_out_number'>
+				<el-button type="primary" @click="applyProduct" :disabled='formData.product_in_warehouse_number<formData.product_out_number'>
 					确定
 				</el-button>
 			</span>
@@ -42,7 +42,7 @@
 	
 	bus.on('applyId', (row : any) => {
 		formData.id = row.id
-		formData.product_inwarehouse_number = row.product_inwarehouse_number
+		formData.product_in_warehouse_number = row.product_in_warehouse_number
 		formData.product_name = row.product_name
 		formData.product_single_price = row.product_single_price
 	})
@@ -50,28 +50,22 @@
 	const labelPosition = ref('left')
 	// const title = ref()
 
-	// 部门数据
-	// const departmentData = ref([])
-	// const getdepartment = async() => {
-	// 	departmentData.value = await getDepartment()
-	// }
-	// getdepartment()
-	interface formData {
+	interface FormData {
 		id : number,
 		product_name: string,
 		product_out_id : number,
-		product_inwarehouse_number : number,
+    product_in_warehouse_number : number,
 		product_single_price:number,
 		product_out_number : number,
 		product_out_apply_person : string,
 		apply_memo : string,
 	}
 
-	const formData : formData = reactive({
+	const formData : FormData = reactive({
 		id: null,
 		product_name:null,
 		product_out_id: null,
-		product_inwarehouse_number:null,
+    product_in_warehouse_number:null,
 		product_single_price:null,
 		product_out_number: null,
 		product_out_apply_person: localStorage.getItem('name'),
@@ -91,7 +85,7 @@
 	})
 	const emit = defineEmits(['success'])
 	// 产品出库
-	const addprodcut = async () => {
+	const applyProduct = async () => {
 		const res = await applyOutProduct(formData)
 		if (res.status == 0) {
 			ElMessage({
@@ -126,7 +120,7 @@
 <style lang="scss" scoped>
 	.dialog-content {
 		display: flex;
-		padding: 0px 30px 20px 30px;
+		padding: 0 30px 20px 30px;
 	}
 
 	.product-name {

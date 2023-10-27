@@ -9,11 +9,11 @@
 				<div class="left-wrapped">
 					<div class="search-wrapped">
 						<el-input v-model="adminAccount" class="w-50 m-2" size="large" placeholder="输入账号进行搜索"
-							:prefix-icon="Search" @change='searchuser()' />
+							:prefix-icon="Search" @change='searchUserByAccount()' />
 					</div>
 					<div class="select-wrapped">
 						<el-select v-model="department" placeholder="请选择部门" clearable @change="searchForDepartment"
-							@clear="claerOperation">
+							@clear="clearOperation">
 							<el-option v-for="item in departmentData" :key="item" :label="item" :value="item" />
 						</el-select>
 					</div>
@@ -53,9 +53,9 @@
 					<el-table-column label="操作" width="200">
 						<template #default="{row}">
 							<div>
-								<el-button type="primary" @click="banuser(row.id)"
+								<el-button type="primary" @click="banUserById(row.id)"
 									:disabled='row.status==1'>冻结</el-button>
-								<el-button type="success" @click="hotuser(row.id)"
+								<el-button type="success" @click="hotUserById(row.id)"
 									:disabled='row.status==0'>解冻</el-button>
 							</div>
 						</template>
@@ -70,7 +70,7 @@
 				layout="prev, pager, next" />
 		</div>
 	</div>
-	<userinfor ref="useri"></userinfor>
+	<userinfo ref="user_info"></userinfo>
 </template>
 
 <script lang="ts" setup>
@@ -79,7 +79,7 @@
 	} from 'vue'
 	import { Search } from '@element-plus/icons-vue'
 	import breadCrumb from '@/components/bread_crumb.vue'
-	import userinfor from '../components/user_infor.vue'
+	import userinfo from '../components/user_infor.vue'
 	import {
 		bus
 	} from "@/utils/mitt.js"
@@ -102,22 +102,22 @@
 	// 表格内容
 	const tableData = ref()
 	// 通过账号进行搜索
-	const searchuser = async () => {
+	const searchUserByAccount = async () => {
 		tableData.value = await searchUser(adminAccount.value,'用户')
 	}
 	// 部门数据
 	const departmentData = ref([])
-	const getdepartment = async () => {
+	const returnDepartment = async () => {
 		departmentData.value = await getDepartment()
 	}
-	getdepartment()
+	returnDepartment()
 	// 部门
 	const department = ref()
 	const searchForDepartment = async () => {
 		tableData.value = await searchDepartment(department.value)
 	}
 	// 清空选择框
-	const claerOperation = () => {
+	const clearOperation = () => {
 		getFirstPageList()
 	}
 
@@ -130,12 +130,12 @@
 	})
 	const adminTotal = ref<number>(0)
 	// 获取管理员的数量
-	const getAdminListlength = async () => {
+	const returnAdminListLength = async () => {
 		const res = await getAdminListLength('用户')
 		adminTotal.value = res.length
 		paginationData.pageCount = Math.ceil(res.length / 10)
 	}
-	getAdminListlength()
+	returnAdminListLength()
 	// 默认获取第一页的数据
 	const getFirstPageList = async () => {
 		tableData.value = await returnListData(1, '用户')
@@ -155,7 +155,7 @@
 
 
 	// 冻结用户
-	const banuser = async (id : number) => {
+	const banUserById = async (id : number) => {
 		const res = await banUser(id)
 		if (res.status == 0) {
 			ElMessage({
@@ -169,7 +169,7 @@
 	}
 
 	// 解冻用户
-	const hotuser = async (id : number) => {
+	const hotUserById = async (id : number) => {
 		const res = await hotUser(id)
 		if (res.status == 0) {
 			ElMessage({
@@ -183,10 +183,10 @@
 	}
 
 
-	const useri = ref()
+	const user_info = ref()
 	const openUser = (row : any) => {
 		bus.emit('userId', row)
-		useri.value.open()
+    user_info.value.open()
 	}
 
 	bus.on('offDialog', async (id : number) => {
@@ -196,7 +196,7 @@
 			tableData.value = await returnListData(paginationData.currentPage, '用户')
 			if (tableData.value.length == 0) {
 				paginationData.currentPage = current - 1
-				getAdminListlength()
+				returnAdminListLength()
 			}
 		}
 	})

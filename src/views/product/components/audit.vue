@@ -1,6 +1,6 @@
 <template>
 	<el-dialog v-model="dialogFormVisible" title='审核产品' width="30%" center>
-		<div class="discribe">确定审核此产品的出库吗？</div>
+		<div class="describe">确定审核此产品的出库吗？</div>
 		<el-radio-group v-model="formData.product_out_status" class="ml-4">
 			<el-radio label="同意" size="large">同意</el-radio>
 			<el-radio label="否决" size="large">否决</el-radio>
@@ -8,7 +8,7 @@
 		<el-input type="textarea" placeholder="请输入审核备注" v-model="formData.audit_memo" />
 		<template #footer>
 			<span class="dialog-footer">
-				<el-button type="primary" @click="auditproduct">
+				<el-button type="primary" @click="productAudit">
 					确定
 				</el-button>
 			</span>
@@ -26,12 +26,12 @@
 	} from '@/api/product.js'
 	import { ElMessage } from 'element-plus'
 	import {
-		useUserInfor
+    useUserInfo
 	} from '@/store/userinfor.js'
 	import { tracking } from '@/utils/operation.js'
-	const userStore = useUserInfor()
+	const userStore = useUserInfo()
 
-	bus.on('applyproductInfor', (row : any) => {
+	bus.on('applyProductInfo', (row : any) => {
 		formData.id = row.id
 		formData.product_out_id = row.product_out_id
 		formData.product_name = row.product_name
@@ -39,7 +39,7 @@
 		formData.audit_memo = row.audit_memo
 		formData.product_out_price = row.product_out_price
 		formData.product_out_apply_person = row.product_out_apply_person
-		formData.product_inwarehouse_number = row.product_inwarehouse_number
+		formData.product_in_warehouse_number = row.product_in_warehouse_number
 		formData.product_single_price = row.product_single_price
 		formData.product_out_number = row.product_out_number
 	})
@@ -53,14 +53,14 @@
 		product_out_price: 0,
 		product_out_audit_person: userStore.name,
 		product_out_apply_person: '',
-		product_inwarehouse_number: 0,
+    product_in_warehouse_number: 0,
 		product_single_price: 0,
 		product_out_number: ''
 	})
 
 	const emit = defineEmits(['success'])
 
-	const auditproduct = async () => {
+	const productAudit = async () => {
 		const res = await auditProduct(formData)
 		if (res.status == 0) {
 			ElMessage({
@@ -94,7 +94,7 @@
 </script>
 
 <style lang="scss" scoped>
-	.discribe {
+	.describe {
 		margin-bottom: 8px;
 	}
 </style>

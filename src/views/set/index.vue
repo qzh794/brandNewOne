@@ -6,9 +6,9 @@
 		<div class="common-content">
 			<el-tabs v-model="activeName" class="demo-tabs">
 				<el-tab-pane label="账号详情" name="first">
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户头像：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<!-- action 是上传头像的接口 -->
 							<el-upload class="avatar-uploader" action="http://127.0.0.1:3007/user/uploadAvatar"
 								:show-file-list="false" :on-success="handleAvatarSuccess"
@@ -20,30 +20,30 @@
 							</el-upload>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户账号：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-input v-model="userData.account" disabled></el-input>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户密码：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-button type="primary" @click="openChangePassword">修改密码</el-button>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户姓名：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-input v-model="userData.name"></el-input>
 						</div>
 						<div class="account-save-button">
 							<el-button type="primary" @click="saveName">保存</el-button>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户性别：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-select v-model="userData.sex">
 								<el-option label="男" value="男" />
 								<el-option label="女" value="女" />
@@ -53,21 +53,21 @@
 							<el-button type="primary" @click="saveSex">保存</el-button>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户身份：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-input v-model="userData.identity" disabled></el-input>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户部门：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-input v-model="userData.department" disabled></el-input>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>用户邮箱：</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-input v-model="userData.email"></el-input>
 						</div>
 						<div class="account-save-button">
@@ -76,36 +76,36 @@
 					</div>
 				</el-tab-pane>
 				<el-tab-pane label="公司信息" name="second">
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>公司名称</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-input v-model="companyName"></el-input>
 						</div>
 						<div class="account-save-button">
-							<el-button type="primary" @click="changeCompanyname">编辑公司名称</el-button>
+							<el-button type="primary" @click="resetCompanyName">编辑公司名称</el-button>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>公司介绍</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-button type="success" @click="openEditor(1)">编辑公司介绍</el-button>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>公司架构</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-button type="success" @click="openEditor(2)">编辑公司介绍</el-button>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>公司战略</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-button type="success" @click="openEditor(3)">编辑公司介绍</el-button>
 						</div>
 					</div>
-					<div class="account-infor-wrapped">
+					<div class="account-info-wrapped">
 						<span>公司高层</span>
-						<div class="account-infor-content">
+						<div class="account-info-content">
 							<el-button type="success" @click="openEditor(4)">编辑公司介绍</el-button>
 						</div>
 					</div>
@@ -213,9 +213,9 @@
 		getProduct
 	} from '@/api/setting'
 	import {
-		useUserInfor
+    useUserInfo
 	} from '@/store/userinfor.js'
-	const userStore = useUserInfor()
+	const userStore = useUserInfo()
 
 	onMounted(async () => {
 		let id = localStorage.getItem('id')
@@ -336,13 +336,13 @@
 	// 公司名称
 	const companyName = ref()
 	// 获取公司名字
-	const getCompanyname = async () => {
+	const returnCompanyName = async () => {
 		companyName.value = await getCompanyName()
 	}
-	getCompanyname()
+	returnCompanyName()
 
 	// 修改公司名字
-	const changeCompanyname = async () => {
+	const resetCompanyName = async () => {
 		const res = await changeCompanyName(companyName.value)
 		if (res.status == 0) {
 			ElMessage({
@@ -381,16 +381,15 @@
 	const handleSwiperSuccess: UploadProps['onSuccess'] = (
 		response
 	) => {
-		getAllswiper()
+		returnAllSwiper()
 	}
 	// 轮播图
 	const imageUrl = ref([])
 	// 获取轮播图
-	const getAllswiper = async () => {
-		const res = await getAllSwiper()
-		imageUrl.value = res
+	const returnAllSwiper = async () => {
+    imageUrl.value = await getAllSwiper()
 	}
-	getAllswiper()
+	returnAllSwiper()
 
 
 	// 其他设置
@@ -407,15 +406,15 @@
 	const inputProductVisible = ref(false)
 	const InputProductRef = ref < InstanceType < typeof ElInput >> ()
 	// 获取部门数据
-	const getdepartment = async() => {
+	const returnDepartment = async() => {
 		dynamicTags.value = await getDepartment()
 	}
-	getdepartment()
+	returnDepartment()
 	// 获取产品数据
-	const getproduct = async() => {
+	const returnProduct = async() => {
 		dynamicProductTags.value = await getProduct()
 	}
-	getproduct()
+	returnProduct()
 	// 部门设置关闭时的函数
 	const handleClose = async (tag: string) => {
 		dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
@@ -507,7 +506,7 @@
 			background: #fff;
 
 			// 账号信息外壳
-			.account-infor-wrapped {
+			.account-info-wrapped {
 				display: flex;
 				align-items: center;
 				padding-left: 50px;
@@ -515,7 +514,7 @@
 				font-size: 14px;
 
 				// 账号信息内容
-				.account-infor-content {
+				.account-info-content {
 					margin-left: 24px;
 					margin-right: 16px;
 				}

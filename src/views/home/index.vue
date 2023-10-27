@@ -13,7 +13,7 @@
 		<!-- 栅格布局外壳 -->
 		<div class="layout-wrapped">
 			<el-row :gutter="20">
-				<el-col :span="6" v-for="(item,index) in companyIntroduce" :key='index' @click="openIntrouce(index+1)">
+				<el-col :span="6" v-for="(item,index) in companyIntroduce" :key='index' @click="openIntroduce(index+1)">
 					<div class="company-message-area">
 						<span>{{item.set_name}}</span>
 						<div v-html='item.set_text' class="company-introduce"></div>
@@ -65,7 +65,7 @@
 
 	</div>
 	<introduce ref="intro"></introduce>
-	<commonmsg ref="cmsg"></commonmsg>
+	<common ref="common_msg"></common>
 </template>
 
 <script lang="ts" setup>
@@ -75,7 +75,7 @@
 	import { bus } from "@/utils/mitt.js"
 	import introduce from './components/introduce.vue'
 	import { companyMessageList,systemMessageList} from '@/api/message'
-	import commonmsg from '@/components/common_msg.vue'
+	import common from '@/components/common_msg.vue'
 	// 面包屑
 	const breadcrumb = ref()
 	// 面包屑参数
@@ -95,38 +95,36 @@
 	// 轮播图
 	const imageUrl = ref([])
 	// 获取轮播图
-	const getAllswiper = async () => {
+	const returnAllSwiper = async () => {
 		const res = await getAllSwiper()
 		imageUrl.value = res
 	}
-	getAllswiper()
+	returnAllSwiper()
 
 
 	// 公司介绍
 	const companyIntroduce = ref([])
-	const getAllCompanyintroduce = async () => {
-		const res = await getAllCompanyIntroduce()
-		const [name, ...intro] = res
-		companyIntroduce.value = intro
+	const returnAllCompanyIntroduce = async () => {
+    companyIntroduce.value = await getAllCompanyIntroduce()
 	}
-	getAllCompanyintroduce()
+	returnAllCompanyIntroduce()
 
 	// 弹窗
 	const intro = ref()
-	const openIntrouce = (id : number) => {
+	const openIntroduce = (id : number) => {
 		bus.emit('introduce', id)
 		intro.value.open()
 	}
 	
-	const cmsg = ref()
+	const common_msg = ref()
 	const openCompany = (row:any) =>{
 		bus.emit('homeCompany',row)
-		cmsg.value.open()
+    common_msg.value.open()
 	}
 	
 	const openSystem = (row:any) =>{
 		bus.emit('homeSystem',row)
-		cmsg.value.open()
+    common_msg.value.open()
 	}
 </script>
 
