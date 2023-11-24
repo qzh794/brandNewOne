@@ -1,289 +1,254 @@
 <template>
-	<div class="common-layout">
-		<el-container>
-			<el-header class="header-wrapped">
-				<div class="header-content">
-					<h3>通用后台管理系统</h3>
-					<span class="welcome">欢迎您的登录</span>
+	<div class="login-container flex">
+		<div class="login-left">
+			<div class="login-left-logo">
+				<img :src="logoMini" />
+				<div class="login-left-logo-text">
+					<span>{{ getThemeConfig.globalViceTitle }}</span>
+					<span class="login-left-logo-text-msg">{{ getThemeConfig.globalViceTitleMsg }}</span>
 				</div>
-			</el-header>
-			<el-main>
-				<div class="login-wrapped">
-					<el-card class="box-card">
-						<el-tabs v-model="activeName" class="demo-tabs" :stretch='true'>
-							<el-tab-pane label="登录" name="first">
-								<el-form class="login-form">
-									<el-form-item label="账号">
-										<el-input v-model="loginData.account" placeholder="请输入账号" />
-									</el-form-item>
-									<el-form-item label="密码">
-										<el-input v-model="loginData.password" placeholder="请输入密码" show-password />
-									</el-form-item>
-									<!-- 底部外壳 -->
-									<div class="footer-wrapped">
-										<div class="forget-password">
-											<span class="forget-password-button" @click="openForget">忘记密码</span>
-										</div>
-										<div class="footer-button">
-											<el-button type="primary" @click="Login">登录</el-button>
-										</div>
-										<div class="footer-go-register">
-											还没有账号？<span class="go-register">马上注册</span>
-										</div>
-									</div>
-								</el-form>
-							</el-tab-pane>
-							<el-tab-pane label="注册" name="second">
-								<el-form class="login-form">
-									<el-form-item label="账号">
-										<el-input v-model="registerData.account" placeholder="账号长度6-12位" />
-									</el-form-item>
-									<el-form-item label="密码">
-										<el-input v-model="registerData.password" placeholder="密码需长度6-12位含字母数字" />
-									</el-form-item>
-									<el-form-item label="确认密码">
-										<el-input v-model="registerData.nextPassword" placeholder="请再次输入密码" />
-									</el-form-item>
-									<div class="footer-button">
-										<el-button type="primary" @click="Register">注册</el-button>
-									</div>
-								</el-form>
-							</el-tab-pane>
-
-						</el-tabs>
-					</el-card>
-				</div>
-			</el-main>
-			<el-footer class="footer-wrapped">
-				<div class="footer-content">
-					<div class="title">
-						<span>阿里云博客专家</span> |
-						<span>阿里云博客专家</span> |
-						<span>阿里云博客专家</span>
+			</div>
+			<div class="login-left-img">
+				<img :src="loginMain" />
+			</div>
+			<img :src="loginBg" class="login-left-waves" />
+		</div>
+		<div class="login-right flex">
+			<div class="login-right-warp flex-margin">
+				<span class="login-right-warp-one"></span>
+				<span class="login-right-warp-two"></span>
+				<div class="login-right-warp-mian">
+					<div class="login-right-warp-main-title">{{ getThemeConfig.globalTitle }} 欢迎您！</div>
+					<div class="login-right-warp-main-form">
+						<div v-if="!state.isScan">
+							<el-tabs v-model="state.tabsActiveName">
+								<el-tab-pane :label="$t('message.label.one1')" name="account">
+									<Account />
+								</el-tab-pane>
+								<el-tab-pane :label="$t('message.label.two2')" name="mobile">
+									<Mobile />
+								</el-tab-pane>
+							</el-tabs>
+						</div>
+						<Scan v-if="state.isScan" />
+						<div class="login-content-main-sacn" @click="state.isScan = !state.isScan">
+							<i class="iconfont" :class="state.isScan ? 'icon-diannao1' : 'icon-barcode-qr'"></i>
+							<div class="login-content-main-sacn-delta"></div>
+						</div>
 					</div>
 				</div>
-			</el-footer>
-		</el-container>
+			</div>
+		</div>
 	</div>
-	<forget ref='forgetP'></forget>
 </template>
 
-<script lang="ts" setup>
-	import { ref, reactive } from 'vue'
-	import { ElMessage } from 'element-plus'
-	import { useRouter } from 'vue-router'
-	import forget from './components/forget_password.vue'
-	import {
-		login, register
-	} from '@/api/login'
-	import { loginLog } from '@/api/log'
-	import { useUserInfo } from '@/store/userinfor'
-	const activeName = ref('first')
-	const router = useRouter()
-	const store = useUserInfo()
-	// 表单接口
-	interface FormData {
-		account : number|null;
-		password : string;
-		nextPassword ?: string;
-	}
-	// 登录表单数据
-	const loginData : FormData = reactive({
-		account: null,
-		password: '',
-	})
-	// 注册表单数据
-	const registerData : FormData = reactive({
-		account: null,
-		password: '',
-		nextPassword: '',
-	})
-	// 登录
-	const Login = async () => {
-		const res = await login(loginData)
-		// console.log(res)
-		const { id, name,account,email,department } = res.results
-		const { token } = res
-		if (res.message == "登录成功") {
-			ElMessage({
-				message: '登录成功',
-				type: 'success',
-			})
-			localStorage.setItem('id', id)
-			localStorage.setItem('token', token)
-			localStorage.setItem('name', name)
-			localStorage.setItem('department', department)
-			await loginLog(account,name,email)
-			store.userInfo(id)
-			// 跳转
-			router.push('/home')
-		} else {
-			ElMessage.error('登录失败')
-		}
-	}
+<script setup lang="ts" name="loginIndex">
+import { defineAsyncComponent, onMounted, reactive, computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useThemeConfig } from '/@/stores/themeConfig';
+import { NextLoading } from '/@/utils/loading';
+import logoMini from '/@/assets/logo-mini.svg';
+import loginMain from '/@/assets/login-main.svg';
+import loginBg from '/@/assets/login-bg.svg';
 
+// 引入组件
+const Account = defineAsyncComponent(() => import('/@/views/login/component/account.vue'));
+const Mobile = defineAsyncComponent(() => import('/@/views/login/component/mobile.vue'));
+const Scan = defineAsyncComponent(() => import('/@/views/login/component/scan.vue'));
 
-	// 注册
-	const Register = async () => {
-		if (registerData.password == registerData.nextPassword) {
-			const res = await register(registerData)
-			if (res.message == "注册账号成功") {
-				ElMessage({
-					message: '注册成功',
-					type: 'success',
-				})
-				activeName.value = 'first'
-			} else {
-				ElMessage.error('注册失败，请检查数据是否正确')
-			}
-		} else {
-			ElMessage.error('注册失败')
-		}
-	}
+// 定义变量内容
+const storesThemeConfig = useThemeConfig();
+const { themeConfig } = storeToRefs(storesThemeConfig);
+const state = reactive({
+	tabsActiveName: 'account',
+	isScan: false,
+});
 
-	// 忘记密码弹窗
-	const forgetP = ref()
-	// 打开忘记密码弹窗
-	const openForget = () => {
-		forgetP.value.open()
-	}
+// 获取布局配置信息
+const getThemeConfig = computed(() => {
+	return themeConfig.value;
+});
+// 页面加载时
+onMounted(() => {
+	NextLoading.done();
+});
 </script>
 
-<style lang="scss" scoped>
-	// 头部外壳
-	.header-wrapped {
-
-		// 头部内容
-		.header-content {
-			width: 1200px;
-			margin: 0 auto;
+<style scoped lang="scss">
+.login-container {
+	height: 100%;
+	background: var(--el-color-white);
+	.login-left {
+		flex: 1;
+		position: relative;
+		background-color: rgba(211, 239, 255, 1);
+		margin-right: 100px;
+		.login-left-logo {
 			display: flex;
-			justify-content: space-between;
 			align-items: center;
-
-			// 欢迎语
-			.welcome {
-				font-size: 13px;
+			position: absolute;
+			top: 50px;
+			left: 80px;
+			z-index: 1;
+			animation: logoAnimation 0.3s ease;
+			img {
+				width: 52px;
+				height: 52px;
+			}
+			.login-left-logo-text {
+				display: flex;
+				flex-direction: column;
+				span {
+					margin-left: 10px;
+					font-size: 28px;
+					color: #26a59a;
+				}
+				.login-left-logo-text-msg {
+					font-size: 12px;
+					color: #32a99e;
+				}
 			}
 		}
+		.login-left-img {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			height: 52%;
+			img {
+				width: 100%;
+				height: 100%;
+				animation: error-num 0.6s ease;
+			}
+		}
+		.login-left-waves {
+			position: absolute;
+			top: 0;
+			right: -100px;
+		}
 	}
-
-	// 主体部分
-	.el-main {
-		background-image: url('@/assets/code.jpg');
-		height: 600px;
-		--el-main-padding: 0;
-
-		// 登录外壳
-		.login-wrapped {
-			width: 1200px;
-			height: 600px;
-			margin: 0 auto;
-
-			// 卡片样式
-			.box-card {
-				width: 350px;
-				height: 375px;
-				float: right;
-				position: relative;
-				top: 14%;
-
-				.login-form {
-
-					// 登录底部外壳
-					.footer-wrapped {
-						display: flex;
-						flex-direction: column;
-
-						.forget-password {
-							display: flex;
-							justify-content: flex-end;
-							margin: 10px 0;
-
-							.forget-password-button {
-								font-size: 12px;
-								color: #409eff;
-								// 鼠标移入的效果
-								cursor: pointer;
-							}
+	.login-right {
+		width: 700px;
+		.login-right-warp {
+			border: 1px solid var(--el-color-primary-light-3);
+			border-radius: 3px;
+			width: 500px;
+			height: 500px;
+			position: relative;
+			overflow: hidden;
+			background-color: var(--el-color-white);
+			.login-right-warp-one,
+			.login-right-warp-two {
+				position: absolute;
+				display: block;
+				width: inherit;
+				height: inherit;
+				&::before,
+				&::after {
+					content: '';
+					position: absolute;
+					z-index: 1;
+				}
+			}
+			.login-right-warp-one {
+				&::before {
+					filter: hue-rotate(0deg);
+					top: 0px;
+					left: 0;
+					width: 100%;
+					height: 3px;
+					background: linear-gradient(90deg, transparent, var(--el-color-primary));
+					animation: loginLeft 3s linear infinite;
+				}
+				&::after {
+					filter: hue-rotate(60deg);
+					top: -100%;
+					right: 2px;
+					width: 3px;
+					height: 100%;
+					background: linear-gradient(180deg, transparent, var(--el-color-primary));
+					animation: loginTop 3s linear infinite;
+					animation-delay: 0.7s;
+				}
+			}
+			.login-right-warp-two {
+				&::before {
+					filter: hue-rotate(120deg);
+					bottom: 2px;
+					right: -100%;
+					width: 100%;
+					height: 3px;
+					background: linear-gradient(270deg, transparent, var(--el-color-primary));
+					animation: loginRight 3s linear infinite;
+					animation-delay: 1.4s;
+				}
+				&::after {
+					filter: hue-rotate(300deg);
+					bottom: -100%;
+					left: 0px;
+					width: 3px;
+					height: 100%;
+					background: linear-gradient(360deg, transparent, var(--el-color-primary));
+					animation: loginBottom 3s linear infinite;
+					animation-delay: 2.1s;
+				}
+			}
+			.login-right-warp-mian {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+				.login-right-warp-main-title {
+					height: 130px;
+					line-height: 130px;
+					font-size: 27px;
+					text-align: center;
+					letter-spacing: 3px;
+					animation: logoAnimation 0.3s ease;
+					animation-delay: 0.3s;
+					color: var(--el-text-color-primary);
+				}
+				.login-right-warp-main-form {
+					flex: 1;
+					padding: 0 50px 50px;
+					.login-content-main-sacn {
+						position: absolute;
+						top: 0;
+						right: 0;
+						width: 50px;
+						height: 50px;
+						overflow: hidden;
+						cursor: pointer;
+						transition: all ease 0.3s;
+						color: var(--el-color-primary);
+						&-delta {
+							position: absolute;
+							width: 35px;
+							height: 70px;
+							z-index: 2;
+							top: 2px;
+							right: 21px;
+							background: var(--el-color-white);
+							transform: rotate(-45deg);
 						}
-
-
-						.footer-go-register {
-							font-size: 12px;
-							margin: 12px 0;
-							display: flex;
-							justify-content: center;
-
-							.go-register {
-								font-size: 12px;
-								color: #409eff;
-								cursor: pointer;
-							}
+						&:hover {
+							opacity: 1;
+							transition: all ease 0.3s;
+							color: var(--el-color-primary) !important;
 						}
-					}
-
-					// 底部登录按钮
-					.footer-button {
-						width: 100%;
-						display: flex;
-						justify-content: center;
+						i {
+							width: 47px;
+							height: 50px;
+							display: inline-block;
+							font-size: 48px;
+							position: absolute;
+							right: 1px;
+							top: 0px;
+						}
 					}
 				}
 			}
 		}
 	}
-
-	// 底部外壳
-	.footer-wrapped {
-		margin-top: 10px;
-
-		// 底部内容
-		.footer-content {
-			width: 1200px;
-			margin: 0 auto;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-
-			// 底部介绍
-			.title {
-				color: #666;
-			}
-
-			span {
-				color: #666;
-				font-size: 12px;
-			}
-		}
-	}
-
-	// 表单边距
-	.el-form {
-		margin-top: 30px;
-	}
-
-	// tabs标签
-	:deep(.el-tabs__item) {
-		color: #333;
-		font-size: 18px;
-	}
-
-	// 输入框高度
-	:deep(.el-input__inner) {
-		height: 40px;
-	}
-
-	// 输入框标签字体高度
-	:deep(.el-form-item__label) {
-		height: 40px;
-		line-height: 40px;
-	}
-
-	// 登录按钮
-	:deep(.el-button) {
-		width: 300px;
-		height: 45px;
-		font-size: 16px;
-	}
+}
 </style>
