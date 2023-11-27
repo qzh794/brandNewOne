@@ -18,15 +18,15 @@
 				<span class="login-right-warp-one"></span>
 				<span class="login-right-warp-two"></span>
 				<div class="login-right-warp-mian">
-					<div class="login-right-warp-main-title">{{ getThemeConfig.globalTitle }} 欢迎您！</div>
+					<div class="login-right-warp-main-title">{{ getThemeConfig.globalTitle }} Hi!</div>
 					<div class="login-right-warp-main-form">
 						<div v-if="!state.isScan">
-							<el-tabs v-model="state.tabsActiveName">
+							<el-tabs v-model="state.tabsActiveName" :stretch="true">
 								<el-tab-pane :label="$t('message.label.one1')" name="account">
 									<Account />
 								</el-tab-pane>
-								<el-tab-pane :label="$t('message.label.two2')" name="mobile">
-									<Mobile />
+								<el-tab-pane :label="$t('message.label.two2')" name="sign_up">
+									<Sign_up />
 								</el-tab-pane>
 							</el-tabs>
 						</div>
@@ -53,7 +53,7 @@ import loginBg from '/@/assets/login-bg.svg';
 
 // 引入组件
 const Account = defineAsyncComponent(() => import('/@/views/login/component/account.vue'));
-const Mobile = defineAsyncComponent(() => import('/@/views/login/component/mobile.vue'));
+const Sign_up = defineAsyncComponent(() => import('/@/views/login/component/sign_up.vue'));
 const Scan = defineAsyncComponent(() => import('/@/views/login/component/scan.vue'));
 
 // 定义变量内容

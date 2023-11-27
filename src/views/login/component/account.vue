@@ -1,7 +1,7 @@
 <template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
-			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="state.ruleForm.userName" clearable autocomplete="off">
+			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="loginData.ruleForm.account" clearable autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-User /></el-icon>
 				</template>
@@ -9,9 +9,9 @@
 		</el-form-item>
 		<el-form-item class="login-animation2">
 			<el-input
-				:type="state.isShowPassword ? 'text' : 'password'"
+				:type="loginData.isShowPassword ? 'text' : 'password'"
 				:placeholder="$t('message.account.accountPlaceholder2')"
-				v-model="state.ruleForm.password"
+				v-model="loginData.ruleForm.password"
 				autocomplete="off"
 			>
 				<template #prefix>
@@ -20,8 +20,8 @@
 				<template #suffix>
 					<i
 						class="iconfont el-input__icon login-content-password"
-						:class="state.isShowPassword ? 'icon-yincangmima' : 'icon-xianshimima'"
-						@click="state.isShowPassword = !state.isShowPassword"
+						:class="loginData.isShowPassword ? 'icon-yincangmima' : 'icon-xianshimima'"
+						@click="loginData.isShowPassword = !loginData.isShowPassword"
 					>
 					</i>
 				</template>
@@ -29,14 +29,7 @@
 		</el-form-item>
 		<el-form-item class="login-animation3">
 			<el-col :span="15">
-				<el-input
-					text
-					maxlength="4"
-					:placeholder="$t('message.account.accountPlaceholder3')"
-					v-model="state.ruleForm.code"
-					clearable
-					autocomplete="off"
-				>
+				<el-input text maxlength="4" :placeholder="$t('message.account.accountPlaceholder3')" v-model="loginData.code" clearable autocomplete="off">
 					<template #prefix>
 						<el-icon class="el-input__icon"><ele-Position /></el-icon>
 					</template>
@@ -48,15 +41,94 @@
 			</el-col>
 		</el-form-item>
 		<el-form-item class="login-animation4">
-			<el-button type="primary" class="login-content-submit" round v-waves @click="onSignIn" :loading="state.loading.signIn">
+			<div class="login-content-forget-password">
+				<span class="login-content-forget-password-button" @click="dialogVisible = !dialogVisible">忘记密码</span>
+			</div>
+			<el-button type="primary" class="login-content-submit" round v-waves @click="onSignIn" :loading="loginData.loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
 		</el-form-item>
 	</el-form>
+	<!-- 忘记密码弹窗 -->
+	<el-dialog v-model="dialogVisible" title="忘记密码" width="30%" draggable>
+		<el-form size="large" class="login-content-form"  ref="ruleFormRef" :rules="rules" :model="forgetData.ruleForm">
+			<el-form-item class="login-animation1" :label="$t('message.account.accountPlaceholder1')" prop="account">
+				<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="forgetData.ruleForm.account" clearable autocomplete="off">
+					<template #prefix>
+						<el-icon class="el-input__icon"><ele-User /></el-icon>
+					</template>
+				</el-input>
+			</el-form-item>
+			<el-form-item class="login-animation1" :label="$t('message.account.accountPlaceholder4')" prop="email">
+				<el-input text :placeholder="$t('message.account.accountPlaceholder4')" v-model="forgetData.ruleForm.email" clearable autocomplete="off">
+					<template #prefix>
+						<el-icon class="el-input__icon"><ele-Message /></el-icon>
+					</template>
+				</el-input>
+			</el-form-item>
+		</el-form>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="dialogVisible = false">取消</el-button>
+				<el-button type="primary" @click="dialog_handle"> 下一步 </el-button>
+			</span>
+		</template>
+	</el-dialog>
+	<!-- 修改密码弹窗2 -->
+	<el-dialog v-model="dialogVisible2" title="修改密码" width="30%" draggable>
+		<el-form size="large" class="login-content-form" ref="ruleFormRef" :rules="rules" :model="forgetData.ruleForm">
+			<el-form-item class="login-animation2" prop="password">
+				<el-input
+					:type="forgetData.isShowPassword1 ? 'text' : 'password'"
+					:placeholder="$t('message.account.accountPlaceholder2')"
+					v-model="forgetData.ruleForm.password"
+					autocomplete="off"
+				>
+					<template #prefix>
+						<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
+					</template>
+					<template #suffix>
+						<i
+							class="iconfont el-input__icon login-content-password"
+							:class="forgetData.isShowPassword1 ? 'icon-yincangmima' : 'icon-xianshimima'"
+							@click="forgetData.isShowPassword1 = !forgetData.isShowPassword1"
+						>
+						</i>
+					</template>
+				</el-input>
+			</el-form-item>
+			<el-form-item class="login-animation2" prop="repassword">
+				<el-input
+					:type="forgetData.isShowPassword2 ? 'text' : 'password'"
+					:placeholder="$t('message.account.accountPlaceholder5')"
+					v-model="forgetData.ruleForm.repassword"
+					autocomplete="off"
+				>
+					<template #prefix>
+						<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
+					</template>
+					<template #suffix>
+						<i
+							class="iconfont el-input__icon login-content-password"
+							:class="forgetData.isShowPassword2 ? 'icon-yincangmima' : 'icon-xianshimima'"
+							@click="forgetData.isShowPassword2 = !forgetData.isShowPassword2"
+						>
+						</i>
+					</template>
+				</el-input>
+			</el-form-item>
+		</el-form>
+		<template #footer>
+			<span class="dialog-footer">
+				<el-button @click="dialog_handle2">上一步</el-button>
+				<el-button type="primary" @click="dialogVisible2 = false"> 确定 </el-button>
+			</span>
+		</template>
+	</el-dialog>
 </template>
 
 <script setup lang="ts" name="loginAccount">
-import { reactive, computed } from 'vue';
+import { reactive, computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -75,29 +147,73 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const route = useRoute();
 const router = useRouter();
-const state = reactive({
+const dialogVisible = ref(false);
+const dialogVisible2 = ref(false);
+const dialog_handle = () => {
+	dialogVisible.value = !dialogVisible.value;
+	dialogVisible2.value = !dialogVisible.value;
+	
+};
+const dialog_handle2 = () => {
+	dialogVisible2.value = !dialogVisible2.value;
+	dialogVisible.value = !dialogVisible.value;
+	
+};
+interface loginData_form {
+	account: string;
+	password: string;
+}
+interface forgetData_form {
+	account: string;
+	email: string;
+	password:string;
+	repassword:string;
+}
+
+const loginData = reactive({
 	isShowPassword: false,
+	code: '1234',
 	ruleForm: {
-		userName: 'admin',
-		password: '123456',
-		code: '1234',
-	},
+		account: '',
+		password: '',
+	} as loginData_form,
 	loading: {
-		signIn: false,
+		signIn: false,	
 	},
 });
+const forgetData=reactive({
+	isShowPassword1: false,
+	isShowPassword2: false,
+	ruleForm: {
+		account: '',
+		email: '',
+		password: '',
+		repassword:''
+	} as forgetData_form,
+	loading: {
+		signIn: false,	
+	},
+})
+const ruleFormRef=ref()
 
+
+const rules = reactive({
+	account: [{ required: true, message: t('message.account.accountPlaceholder1'), trigger: 'blur' }],
+	email:  [{ required: true, message: t('message.account.accountPlaceholder4'), trigger: 'blur' }],
+	password: [{ required: true, message: t('message.account.accountPlaceholder2'), trigger: 'blur' }],
+	repassword: [{ required: true, message: t('message.account.accountPlaceholder5'), trigger: 'blur' }],
+})
 // 时间获取
 const currentTime = computed(() => {
 	return formatAxis(new Date());
 });
 // 登录
 const onSignIn = async () => {
-	state.loading.signIn = true;
+	loginData.loading.signIn = true;
 	// 存储 token 到浏览器缓存
 	Session.set('token', Math.random().toString(36).substr(0));
 	// 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
-	Cookies.set('userName', state.ruleForm.userName);
+	Cookies.set('account', loginData.ruleForm.account);
 	if (!themeConfig.value.isRequestRoutes) {
 		// 前端控制路由，2、请注意执行顺序
 		const isNoPower = await initFrontEndControlRoutes();
@@ -134,7 +250,7 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 		// 添加 loading，防止第一次进入界面时出现短暂空白
 		NextLoading.start();
 	}
-	state.loading.signIn = false;
+	loginData.loading.signIn = false;
 };
 </script>
 
@@ -148,6 +264,16 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 			animation-duration: 0.5s;
 			animation-fill-mode: forwards;
 			animation-delay: calc($i/10) + s;
+		}
+	}
+	.login-content-forget-password {
+		display: flex;
+		flex: 1;
+		justify-content: flex-end;
+		.login-content-forget-password-button {
+			margin-top: -10px;
+			cursor: pointer;
+			color: #409eff;
 		}
 	}
 	.login-content-password {
@@ -168,7 +294,7 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 		width: 100%;
 		letter-spacing: 2px;
 		font-weight: 300;
-		margin-top: 15px;
+		margin-top: 5px;
 	}
 }
 </style>
