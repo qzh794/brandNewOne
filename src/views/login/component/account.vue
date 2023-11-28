@@ -140,7 +140,7 @@ import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { NextLoading } from '/@/utils/loading';
-
+import { reqLogin } from '/@/api/login';
 // 定义变量内容
 const { t } = useI18n();
 const storesThemeConfig = useThemeConfig();
@@ -209,10 +209,18 @@ const currentTime = computed(() => {
 });
 // 登录
 const onSignIn = async () => {
-	loginData.loading.signIn = true;
-	// 存储 token 到浏览器缓存
-	Session.set('token', Math.random().toString(36).substr(0));
-	// 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
+	try{
+	loginData.loading.signIn=true
+	const result=await reqLogin(loginData.ruleForm);
+	const {token} = result.token;
+	if(result.message=='登陆成功'){
+		ElMessage({
+			type:'success',
+			message: result.message,
+		})
+	}
+		// 存储 token 到浏览器缓存
+	Session.set('token', token);
 	Cookies.set('account', loginData.ruleForm.account);
 	if (!themeConfig.value.isRequestRoutes) {
 		// 前端控制路由，2、请注意执行顺序
@@ -225,7 +233,15 @@ const onSignIn = async () => {
 		// 执行完 initBackEndControlRoutes，再执行 signInSuccess
 		signInSuccess(isNoPower);
 	}
-};
+	}catch(e){
+		loginData.loading.signIn=false
+		ElMessage({
+			type:'error',
+			message:'账号或密码错误',
+		})
+	}
+}
+	
 // 登录成功后的跳转
 const signInSuccess = (isNoPower: boolean | undefined) => {
 	if (isNoPower) {
