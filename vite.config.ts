@@ -14,19 +14,28 @@ const alias: Record<string, string> = {
 	'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 
+
 const viteConfig = defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
 		plugins: [vue(), vueSetupExtend(), viteCompression(), JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null],
 		root: process.cwd(),
 		resolve: { alias },
-		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,
+		// base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,
 		optimizeDeps: { exclude: ['vue-demi'] },
 		server: {
 			port: env.VITE_PORT as unknown as number,
 			open: JSON.parse(env.VITE_OPEN),
 			hmr: true,
-			cors:true
+			cors:true,
+			// proxy: {
+			// 	'/api': {
+			// 		target: env.VITE_PROXY_URL,
+			// 		changeOrigin: true,
+			// 		rewrite: (path) => path.replace(/^\/api/, ''),
+			// 	},
+			// },
+			
 		},
 		build: {
 			outDir: 'dist',

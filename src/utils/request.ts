@@ -4,9 +4,8 @@ import { Session } from '/@/utils/storage';
 
 // 配置新建一个 axios 实例
 const service: AxiosInstance = axios.create({
-	baseURL: 'http://127.0.0.1:3007',
+	baseURL: import.meta.env.VITE_PROXY_URL,
 	timeout: 50000,
-	headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 });
 
 // 添加请求拦截器
@@ -14,7 +13,7 @@ service.interceptors.request.use(
 	(config) => {
 		// 在发送请求之前做些什么 token
 		if (Session.get('token')) {
-			config.headers!['Authorization'] = `${Session.get('token')}`;
+			config.headers!['Authorization'] = `Bearer ${Session.get('token')}`;
 		}
 		return config;
 	},

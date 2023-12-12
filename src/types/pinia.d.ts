@@ -3,14 +3,14 @@
  */
 
 // 用户信息
-declare interface UserInfos<T = any> {
-	authBtnList: string[];
-	photo: string;
-	roles: string[];
-	time: number;
-	userName: string;
-	[key: string]: T;
-}
+// declare interface UserInfos<T = any> {
+// 	authBtnList: string[];
+// 	photo: string;
+// 	roles: string[];
+// 	time: number;
+// 	userName: string;
+// 	[key: string]: T;
+// }
 declare interface UserInfosState {
 	userInfos: UserInfos;
 }

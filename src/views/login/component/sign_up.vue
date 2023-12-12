@@ -1,12 +1,19 @@
 <template>
-	<el-form size="large" class="login-content-form" :model="registerData.ruleForm" :rules="rules" ref="ruleForm">
+	<el-form size="large" class="login-content-form" :model="registerData.ruleForm" :rules="rules" ref="formCheck">
 		<el-form-item class="login-animation1" prop="account">
-			<el-input text :placeholder="$t('message.sign_up.placeholder1')" v-model="registerData.ruleForm.account" clearable autocomplete="off">
+			<el-input text :placeholder="$t('message.sign_up.placeholder1')" v-model="registerData.ruleForm.username" clearable autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-User /></el-icon>
 				</template>
 			</el-input>
 		</el-form-item>
+		<el-form-item class="login-animation1" prop="email">
+				<el-input text :placeholder="$t('message.account.accountPlaceholder4')" v-model="registerData.ruleForm.email" clearable autocomplete="off">
+					<template #prefix>
+						<el-icon class="el-input__icon"><ele-Message /></el-icon>
+					</template>
+				</el-input>
+			</el-form-item>
 		<el-form-item class="login-animation2" prop="password">
 			<el-input
 				:type="registerData.isShowPassword1 ? 'text' : 'password'"
@@ -27,26 +34,6 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item class="login-animation2" prop="repassword">
-			<el-input
-				:type="registerData.isShowPassword2 ? 'text' : 'password'"
-				:placeholder="$t('message.account.accountPlaceholder5')"
-				v-model="registerData.ruleForm.repassword"
-				autocomplete="off"
-			>
-				<template #prefix>
-					<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
-				</template>
-				<template #suffix>
-					<i
-						class="iconfont el-input__icon login-content-password"
-						:class="registerData.isShowPassword2 ? 'icon-yincangmima' : 'icon-xianshimima'"
-						@click="registerData.isShowPassword2 = !registerData.isShowPassword2"
-					>
-					</i>
-				</template>
-			</el-input>
-		</el-form-item>
 		<el-form-item class="login-animation3">
 			<el-button round type="primary" v-waves class="login-content-submit" @click="Register" :loading="registerData.loading.sign_up">
 				<span>{{ $t('message.sign_up.btnText') }}</span>
@@ -62,24 +49,23 @@ import { reqRegister } from '/@/api/login/index';
 import { ElMessage } from 'element-plus';
 // 定义变量内容
 interface registerData_form {
-	account: string;
+	username: string;
 	password: string;
-	repassword: string;
+	email: string;
 }
 const registerData = reactive({
 	isShowPassword1: false,
-	isShowPassword2: false,
 	loading: {
 		sign_up: false,
 	},
 	ruleForm: {
-		account: '',
+		username: '',
 		password: '',
-		repassword: '',
+		email: '',
 	} as registerData_form,
 });
-const ruleForm = ref();
-const validatorAccount =  (rule: any, value: any, callback: any) => {
+const formCheck = ref();
+const validatorUsername =  (rule: any, value: any, callback: any) => {
 	if (/^[a-zA-Z0-9]{5,12}$/.test(value)) {
 		callback();
 	} else {
@@ -93,58 +79,42 @@ const validatorPassWord =  (rule: any, value: any, callback: any) => {
 		callback(new Error('密码必须包含至少一个数字和一个小写字母，并且长度在6到12个字符之间'));
 	}
 };
-const validatorRepassWord =  (rule: any, value: any, callback: any) => {
-	if (/^(?![0-9]+$)[a-z0-9]{1,50}$/.test(value)) {
-		callback();
-	} else {
-		callback(new Error('密码必须包含至少一个数字和一个小写字母，并且长度在6到12个字符之间'));
-	}
-};
 const rules = reactive({
 	//required，务必要校验的
 	//trigger：触发校验时机，blur是失去焦点触发，change是文本变化触发
-	account: [{ validator: validatorAccount, trigger: 'change' }],
+	username: [{ validator: validatorUsername, trigger: 'change' }],
 	password: [{ validator: validatorPassWord, trigger: 'change' }],
-	repassword: [{ validator: validatorRepassWord, trigger: 'change' }],
+	email: [{ required: true, message: '请输入邮箱', trigger: 'blur' }],
 });
 const Register = async () => {
-	await ruleForm.value.validate();
+	try{
+	await formCheck.value.validate()
 	registerData.loading.sign_up = true;
 	let result = await reqRegister(registerData.ruleForm);
-	if (registerData.ruleForm.password != registerData.ruleForm.repassword) {
-		ElMessage({
-			message: '两次密码不一致',
-			type: 'error',
-			duration: 2000,
-		});
-		registerData.loading.sign_up = false;
-	} else {
-		if (result.message == '账号已存在') {
+		if (result.user.username) {
 			ElMessage({
-				message: result.message,
-				type: 'error',
-				duration: 2000,
-			});
-			registerData.loading.sign_up = false;
-		}
-		if (result.message == '注册成功') {
-			ElMessage({
-				message: result.message,
+				message: '注册成功',
 				type: 'success',
 				duration: 2000,
 			});
 			registerData.loading.sign_up = false;
+			registerData.ruleForm = {
+				username: '',
+				password: '',
+				email: '',
+			} as registerData_form;
+			
 		}
-		if (result.message == '注册失败') {
-			ElMessage({
-				message: result.message,
+	}catch(e){
+		ElMessage({
+				message: '账号或邮箱已存在',
 				type: 'error',
 				duration: 2000,
 			});
 			registerData.loading.sign_up = false;
-		}
 	}
-};
+}
+
 </script>
 
 <style scoped lang="scss">

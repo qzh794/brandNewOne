@@ -1,8 +1,8 @@
 <template>
 	<div class="layout-footer pb15">
 		<div class="layout-footer-warp">
-			<div>test</div>
-			<div class="mt5">test</div>
+			<div>海洋生物库</div>
+			<div class="mt5">element-plus集成</div>
 		</div>
 	</div>
 </template>

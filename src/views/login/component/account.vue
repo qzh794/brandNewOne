@@ -1,7 +1,7 @@
 <template>
 	<el-form size="large" class="login-content-form">
 		<el-form-item class="login-animation1">
-			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="loginData.ruleForm.account" clearable autocomplete="off">
+			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="loginData.ruleForm.username" clearable autocomplete="off">
 				<template #prefix>
 					<el-icon class="el-input__icon"><ele-User /></el-icon>
 				</template>
@@ -52,8 +52,8 @@
 	<!-- 忘记密码弹窗 -->
 	<el-dialog v-model="dialogVisible" title="忘记密码" width="30%" draggable>
 		<el-form size="large" class="login-content-form"  ref="ruleFormRef" :rules="rules" :model="forgetData.ruleForm">
-			<el-form-item class="login-animation1" :label="$t('message.account.accountPlaceholder1')" prop="account">
-				<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="forgetData.ruleForm.account" clearable autocomplete="off">
+			<el-form-item class="login-animation1" :label="$t('message.account.accountPlaceholder1')" prop="username">
+				<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="forgetData.ruleForm.username" clearable autocomplete="off">
 					<template #prefix>
 						<el-icon class="el-input__icon"><ele-User /></el-icon>
 					</template>
@@ -160,11 +160,11 @@ const dialog_handle2 = () => {
 	
 };
 interface loginData_form {
-	account: string;
+	username: string;
 	password: string;
 }
 interface forgetData_form {
-	account: string;
+	username: string;
 	email: string;
 	password:string;
 	repassword:string;
@@ -174,7 +174,7 @@ const loginData = reactive({
 	isShowPassword: false,
 	code: '1234',
 	ruleForm: {
-		account: '',
+		username: '',
 		password: '',
 	} as loginData_form,
 	loading: {
@@ -185,7 +185,7 @@ const forgetData=reactive({
 	isShowPassword1: false,
 	isShowPassword2: false,
 	ruleForm: {
-		account: '',
+		username: '',
 		email: '',
 		password: '',
 		repassword:''
@@ -198,7 +198,7 @@ const ruleFormRef=ref()
 
 
 const rules = reactive({
-	account: [{ required: true, message: t('message.account.accountPlaceholder1'), trigger: 'blur' }],
+	username: [{ required: true, message: t('message.account.accountPlaceholder1'), trigger: 'blur' }],
 	email:  [{ required: true, message: t('message.account.accountPlaceholder4'), trigger: 'blur' }],
 	password: [{ required: true, message: t('message.account.accountPlaceholder2'), trigger: 'blur' }],
 	repassword: [{ required: true, message: t('message.account.accountPlaceholder5'), trigger: 'blur' }],
@@ -212,7 +212,7 @@ const onSignIn = async () => {
 	try{
 	loginData.loading.signIn=true
 	const result=await reqLogin(loginData.ruleForm);
-	const {token} = result.token;
+	const {jwt:token}=result
 	if(result.message=='登陆成功'){
 		ElMessage({
 			type:'success',
@@ -221,7 +221,10 @@ const onSignIn = async () => {
 	}
 		// 存储 token 到浏览器缓存
 	Session.set('token', token);
-	Cookies.set('account', loginData.ruleForm.account);
+	// 可以拿到token
+	console.log(Session.get('token'));
+	
+	Cookies.set('account', loginData.ruleForm.username);
 	if (!themeConfig.value.isRequestRoutes) {
 		// 前端控制路由，2、请注意执行顺序
 		const isNoPower = await initFrontEndControlRoutes();
@@ -232,6 +235,8 @@ const onSignIn = async () => {
 		const isNoPower = await initBackEndControlRoutes();
 		// 执行完 initBackEndControlRoutes，再执行 signInSuccess
 		signInSuccess(isNoPower);
+		
+		
 	}
 	}catch(e){
 		loginData.loading.signIn=false

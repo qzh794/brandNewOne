@@ -6,6 +6,17 @@ type NewInfo = {
 	date: string;
 	link: string;
 };
+type UserInfos = {
+	userName: string;
+	nickname: string;
+	photo: string;
+	time: number;
+	roles: string[];
+	authBtnList: string[];
+	sex: string;
+	email: string;
+};
+
 type Recommend = {
 	title: string;
 	msg: string;
@@ -15,13 +26,10 @@ type Recommend = {
 };
 declare type PersonalState = {
 	newsInfoList: NewInfo[];
-	recommendList: Recommend[];
 	personalForm: {
 		name: string;
 		email: string;
-		autograph: string;
-		occupation: string;
-		phone: string;
+		identity: string;
 		sex: string;
 	};
 };

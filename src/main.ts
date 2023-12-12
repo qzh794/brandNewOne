@@ -8,9 +8,11 @@ import other from '/@/utils/other';
 import ElementPlus from 'element-plus';
 import '/@/theme/index.scss';
 import VueGridLayout from 'vue-grid-layout';
-
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 const app = createApp(App);
-
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 directive(app);
 other.elSvg(app);
 

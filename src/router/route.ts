@@ -76,11 +76,9 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						component: () => import('/@/views/system/menu/index.vue'),
 						meta: {
 							title: 'message.router.systemMenu',
-
 							isHide: false,
 							isKeepAlive: true,
 							isAffix: false,
-
 							roles: ['admin'],
 							icon: 'iconfont icon-caidan',
 						},
@@ -91,11 +89,9 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						component: () => import('/@/views/system/role/index.vue'),
 						meta: {
 							title: 'message.router.systemRole',
-
 							isHide: false,
 							isKeepAlive: true,
 							isAffix: false,
-
 							roles: ['admin'],
 							icon: 'ele-ColdDrink',
 						},
@@ -112,33 +108,33 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 							roles: ['admin'],
 							icon: 'iconfont icon-icon-',
 						},
-					},
-					{
-						path: '/system/dept',
-						name: 'systemDept',
-						component: () => import('/@/views/system/dept/index.vue'),
-						meta: {
-							title: 'message.router.systemDept',
-							isHide: false,
-							isKeepAlive: true,
-							isAffix: false,
-							roles: ['admin'],
-							icon: 'ele-OfficeBuilding',
-						},
-					},
-					{
-						path: '/system/dic',
-						name: 'systemDic',
-						component: () => import('/@/views/system/dic/index.vue'),
-						meta: {
-							title: 'message.router.systemDic',
-							isHide: false,
-							isKeepAlive: true,
-							isAffix: false,
-							roles: ['admin'],
-							icon: 'ele-SetUp',
-						},
-					},
+					}
+					// {
+					// 	path: '/system/dept',
+					// 	name: 'systemDept',
+					// 	component: () => import('/@/views/system/dept/index.vue'),
+					// 	meta: {
+					// 		title: 'message.router.systemDept',
+					// 		isHide: false,
+					// 		isKeepAlive: true,
+					// 		isAffix: false,
+					// 		roles: ['admin'],
+					// 		icon: 'ele-OfficeBuilding',
+					// 	},
+					// },
+					// {
+					// 	path: '/system/dic',
+					// 	name: 'systemDic',
+					// 	component: () => import('/@/views/system/dic/index.vue'),
+					// 	meta: {
+					// 		title: 'message.router.systemDic',
+					// 		isHide: false,
+					// 		isKeepAlive: true,
+					// 		isAffix: false,
+					// 		roles: ['admin'],
+					// 		icon: 'ele-SetUp',
+					// 	},
+					// },
 				],
 			},
 			{
@@ -147,12 +143,10 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				component: () => import('/@/layout/routerView/parent.vue'),
 				redirect: '/menu/menu1',
 				meta: {
-					title: 'message.router.menu',
-
+					title: '海洋生物库',
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,
-
 					roles: ['admin', 'common'],
 					icon: 'iconfont icon-caidan',
 				},
@@ -163,12 +157,10 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						component: () => import('/@/layout/routerView/parent.vue'),
 						redirect: '/menu/menu1/menu11',
 						meta: {
-							title: 'message.router.menu1',
-
+							title: '海洋动物',
 							isHide: false,
 							isKeepAlive: true,
 							isAffix: false,
-
 							roles: ['admin', 'common'],
 							icon: 'iconfont icon-caidan',
 						},
@@ -178,12 +170,10 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 								name: 'menu11',
 								component: () => import('/@/views/menu/menu1/menu11/index.vue'),
 								meta: {
-									title: 'message.router.menu11',
-
+									title: '海洋游泳动物',
 									isHide: false,
-									isKeepAlive: true,
+									isKeepAlive: true,  
 									isAffix: false,
-
 									roles: ['admin', 'common'],
 									icon: 'iconfont icon-caidan',
 								},
@@ -192,61 +182,37 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 								path: '/menu/menu1/menu12',
 								name: 'menu12',
 								component: () => import('/@/layout/routerView/parent.vue'),
-								redirect: '/menu/menu1/menu12/menu121',
 								meta: {
-									title: 'message.router.menu12',
-
+									title: '海洋浮游动物',
 									isHide: false,
 									isKeepAlive: true,
 									isAffix: false,
-
 									roles: ['admin', 'common'],
 									icon: 'iconfont icon-caidan',
 								},
-								children: [
-									{
-										path: '/menu/menu1/menu12/menu121',
-										name: 'menu121',
-										component: () => import('/@/views/menu/menu1/menu12/menu121/index.vue'),
-										meta: {
-											title: 'message.router.menu121',
-
-											isHide: false,
-											isKeepAlive: true,
-											isAffix: false,
-
-											roles: ['admin', 'common'],
-											icon: 'iconfont icon-caidan',
-										},
-									},
-									{
-										path: '/menu/menu1/menu12/menu122',
-										name: 'menu122',
-										component: () => import('/@/views/menu/menu1/menu12/menu122/index.vue'),
-										meta: {
-											title: 'message.router.menu122',
-
-											isHide: false,
-											isKeepAlive: true,
-											isAffix: false,
-
-											roles: ['admin', 'common'],
-											icon: 'iconfont icon-caidan',
-										},
-									},
-								],
 							},
 							{
 								path: '/menu/menu1/menu13',
 								name: 'menu13',
 								component: () => import('/@/views/menu/menu1/menu13/index.vue'),
 								meta: {
-									title: 'message.router.menu13',
-
+									title: '海洋底栖动物',
 									isHide: false,
 									isKeepAlive: true,
 									isAffix: false,
-
+									roles: ['admin', 'common'],
+									icon: 'iconfont icon-caidan',
+								},
+							},
+							{
+								path: '/menu/menu1/menu14',
+								name: 'menu14',
+								component: () => import('/@/views/menu/menu1/menu14/index.vue'),
+								meta: {
+									title: '海洋仰泳生物',
+									isHide: false,
+									isKeepAlive: true,
+									isAffix: false,
 									roles: ['admin', 'common'],
 									icon: 'iconfont icon-caidan',
 								},
@@ -257,18 +223,126 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 						path: '/menu/menu2',
 						name: 'menu2',
 						component: () => import('/@/views/menu/menu2/index.vue'),
+						redirect: '/menu/menu2/menu21',
 						meta: {
-							title: 'message.router.menu2',
-
+							title: '海洋植物',
 							isHide: false,
 							isKeepAlive: true,
 							isAffix: false,
-
 							roles: ['admin', 'common'],
 							icon: 'iconfont icon-caidan',
 						},
+						children: [
+							{
+								path: '/menu/menu2/menu21',
+								name:'menu21',
+								component: () => import('/@/views/menu/menu2/menu21/index.vue'),
+								meta: {
+									title: '藻类植物',
+									isHide: false,
+									isKeepAlive: true,
+									isAffix: false,
+									roles: ['admin', 'common'],
+									icon: 'iconfont icon-caidan',
+								}	
+							},
+							{
+								path: '/menu/menu2/menu22',
+								name:'menu22',
+								component: () => import('/@/views/menu/menu2/menu22/index.vue'),
+								meta: {
+									title: '红树林',
+									isHide: false,
+									isKeepAlive: true,
+									isAffix: false,
+									roles: ['admin', 'common'],
+									icon: 'iconfont icon-caidan',
+								}
+							}
+						]
+					},
+					{
+						path: '/menu/menu3',
+						name: 'menu3',
+						component: () => import('/@/views/menu/menu3/index.vue'),
+						redirect: '/menu/menu3/menu31',
+						meta: {
+							title: '微生物',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-caidan',
+						},
+						children: [
+							{
+								path: '/menu/menu3/menu31',
+								name:'menu31',
+								component: () => import('/@/views/menu/menu3/menu31/index.vue'),
+								meta: {
+									title: '地下微生物',
+									isHide: false,
+									isKeepAlive: true,
+									isAffix: false,
+									roles: ['admin', 'common'],
+									icon: 'iconfont icon-caidan',
+								}	
+							},
+							{
+								path: '/menu/menu3/menu32',
+								name:'menu32',
+								component: () => import('/@/views/menu/menu3/menu32/index.vue'),
+								meta: {
+									title: '海洋微生物',
+									isHide: false,
+									isKeepAlive: true,
+									isAffix: false,
+									roles: ['admin', 'common'],
+									icon: 'iconfont icon-caidan',
+								}
+							}
+						]
 					},
 				],
+			},
+			{
+				path: '/about',
+				name: 'error',
+				component: () => import('/@/views/about/index.vue'),
+				meta: {
+					title:'关于我们',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					roles:['admin','common'],
+					icon:'iconfont icon-crew_feature'
+			}
+			},
+			{
+				path: '/species',
+				name: 'species',
+				component: () => import('/@/views/species/index.vue'),
+				meta: {
+					title:'海洋生物种类管理',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					roles:['admin','common'],
+					icon:'iconfont icon-crew_feature'
+			}
+		},
+			{
+				path:'/notice',
+				name:'notice',
+				component:()=>import('/@/views/notice/index.vue'),
+				meta:{
+					title:'公告管理',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					roles:['admin','common'],
+					icon:'iconfont icon-crew_feature'
+				}
 			},
 			{
 				path: '/fun',
@@ -277,11 +351,9 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				redirect: '/fun/tagsView',
 				meta: {
 					title: 'message.router.funIndex',
-
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,
-
 					roles: ['admin', 'common'],
 					icon: 'iconfont icon-crew_feature',
 				},

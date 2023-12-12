@@ -10,10 +10,13 @@ export const useUserInfo = defineStore('userInfo', {
 	state: (): UserInfosState => ({
 		userInfos: {
 			userName: '',
+			nickname: '',
 			photo: '',
 			time: 0,
 			roles: [],
 			authBtnList: [],
+			sex:'',
+			email:'',
 		},
 	}),
 	actions: {
