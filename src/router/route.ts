@@ -306,11 +306,11 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				],
 			},
 			{
-				path: '/about',
+				path: '/admin',
 				name: 'error',
-				component: () => import('/@/views/about/index.vue'),
+				component: () => import('/@/views/admin/index.vue'),
 				meta: {
-					title:'关于我们',
+					title:'管理员管理',
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,

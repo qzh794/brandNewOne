@@ -79,12 +79,12 @@
 							</el-col>
 							<!-- <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 							</el-col> -->
-							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
+							<!-- <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-select v-model="state.personalForm.identity" placeholder="请选择身份" clearable class="w100">
 									<el-option label="管理员" value="管理员"></el-option>
 									<el-option label="游客" value="游客"></el-option>
 								</el-select>
-							</el-col>
+							</el-col> -->
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="性别">
 									<el-select v-model="state.personalForm.sex" placeholder="请选择性别" clearable class="w100">

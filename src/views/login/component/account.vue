@@ -242,7 +242,7 @@ const onSignIn = async () => {
 		loginData.loading.signIn=false
 		ElMessage({
 			type:'error',
-			message:'账号或密码错误',
+			message:'账号出错',
 		})
 	}
 }
