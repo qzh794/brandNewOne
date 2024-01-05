@@ -332,11 +332,11 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 			}
 		},
 			{
-				path:'/notice',
+				path:'/categoryName',
 				name:'notice',
-				component:()=>import('/@/views/notice/index.vue'),
+				component:()=>import('/@/views/categoryName/index.vue'),
 				meta:{
-					title:'公告管理',
+					title:'物品分类',
 					isHide: false,
 					isKeepAlive: true,
 					isAffix: false,
