@@ -226,6 +226,7 @@ const getReqEbookList = async () => {
 				voteCount,
 				cover: {
 					data: {
+					//由于解构不能有两个相同的属性名即id，因此给第二个id重命名一下
 						id: coverId,
 						attributes: { url },
 					},
@@ -309,8 +310,8 @@ const handleUpload = (item: any) => {
 		// 创建一个FormData对象
 		let formData = new FormData();
 		// 三个参数：字段名（指定表单字段）、字段值（指定表单字段的值）、文件名（如果要添加一个文件的话）
-		formData.append('files', item.file, item.file.name);
-		formData.append('data', JSON.stringify({ ebookListParams }));
+		formData.append('files', item.file);
+		// formData.append('data', JSON.stringify({ ebookListParams }));
 		axios.post('http://localhost:1337/api/upload?populate=*', formData).then((response) => {
 			// ebookListParams.id=response.data.data.id
 			// ebookListParams.cover=response.data.data.attributes.cover.data.attributes.url
@@ -323,6 +324,7 @@ const handleUpload = (item: any) => {
 			ebookListParams.coverId = response.data[0].id;
 		});
 }
+
 const cancel = () => {
 	state.dialogTableVisible = false;
 };
